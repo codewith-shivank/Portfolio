@@ -1,267 +1,97 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { TESTIMONIALS_DATA } from '../data/portfolioData';
+import { useState } from 'react';
+import Marquee, { MarqueeToggle } from './ui/Marquee';
+import { useReducedMotionFlag } from './ui/useReducedMotionFlag';
+import BracketLabel from './ui/BracketLabel';
+import MonoArrow from './ui/MonoArrow';
+import { TESTIMONIALS, TESTIMONIALS_INTRO } from '../data/monodrift';
+import type { Testimonial } from '../types';
 
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.12, delayChildren: 0.3 },
-  },
-};
+function TestimonialCard({ item }: { item: Testimonial }) {
+  return (
+    <figure className="mx-3 flex w-[19rem] shrink-0 flex-col justify-between gap-6 border border-line bg-surface p-6 sm:w-[24rem]">
+      {item.image ? (
+        <div className="frame group h-16 w-16 overflow-hidden rounded-full border border-line">
+          <img src={item.image} alt={item.name} loading="lazy" className="h-full w-full object-cover" />
+        </div>
+      ) : (
+        <span className="flex h-16 w-16 items-center justify-center rounded-full border border-line font-heading text-sm font-bold text-muted">
+          {item.name
+            .split(' ')
+            .map((part) => part[0])
+            .join('')}
+        </span>
+      )}
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
-  },
-};
+      <blockquote className="text-sm leading-relaxed text-muted">
+        <span aria-hidden="true" className="text-accent">
+          “
+        </span>
+        {item.quote}
+        <span aria-hidden="true" className="text-accent">
+          ”
+        </span>
+      </blockquote>
 
-const headingVariants = {
-  hidden: { opacity: 0, y: 60 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] as const },
-  },
-};
-
-const barVariants = {
-  hidden: { scaleX: 0 },
-  visible: {
-    scaleX: 1,
-    transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] as const },
-  },
-};
+      <figcaption className="mono-label border-t border-line pt-4">
+        <span className="block text-white">{item.name}</span>
+        <span className="mt-1 block text-dim">{item.role}</span>
+      </figcaption>
+    </figure>
+  );
+}
 
 export default function TestimonialsSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotionFlag();
+  const [paused, setPaused] = useState(false);
+  const isPaused = paused || prefersReducedMotion;
 
-  const isHeadingInView = useInView(headingRef, {
-    once: true,
-    margin: '-80px',
-  });
-  const isGridInView = useInView(gridRef, { once: true, margin: '-60px' });
+  const topRow = TESTIMONIALS.filter((_, index) => index % 2 === 0);
+  const bottomRow = TESTIMONIALS.filter((_, index) => index % 2 === 1);
 
   return (
-    <section
-      ref={sectionRef}
-      id="testimonials"
-      className="relative bg-[#0e0e0e] overflow-hidden border-b border-[#222]"
-    >
-      {/* Dynamic Progress Bar */}
-      <motion.div
-        className="h-[2px] origin-left"
-        style={{ backgroundColor: 'var(--color-accent)' }}
-        variants={barVariants}
-        initial="hidden"
-        animate={isHeadingInView ? 'visible' : 'hidden'}
-      />
-
-      <div className="py-24 px-5 sm:px-8 lg:px-12">
-        <div className="max-w-[1600px] mx-auto">
-          {/* Bracket Label */}
-          <motion.div
-            ref={headingRef}
-            initial={{ opacity: 0, y: 20 }}
-            animate={
-              isHeadingInView
-                ? { opacity: 1, y: 0 }
-                : { opacity: 0, y: 20 }
-            }
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
-          >
-            <span className="font-['Fragment_Mono'] text-[11px] tracking-[0.2em] text-white/40 uppercase">
-              [ 06 / SAYS WHO? ]
-            </span>
-          </motion.div>
-
-          {/* Massive Heading */}
-          <motion.div
-            className="mt-6 mb-4"
-            variants={headingVariants}
-            initial="hidden"
-            animate={isHeadingInView ? 'visible' : 'hidden'}
-          >
-            <h2 className="font-['Tektur'] text-white text-[clamp(3rem,10vw,9.5rem)] font-bold uppercase leading-[0.88] tracking-tighter">
-              CLIENT
-              <br />
-              WORDS.
+    <section id="words" className="section-ink-2 border-y border-line-soft py-16 sm:py-24">
+      <div className="shell">
+        <div className="flex flex-col gap-6 pb-12 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <BracketLabel className="text-muted">{TESTIMONIALS_INTRO.eyebrow}</BracketLabel>
+            <h2 className="display display-lg mt-5">
+              <span className="hl">{TESTIMONIALS_INTRO.heading}</span>
             </h2>
-          </motion.div>
+          </div>
 
-          {/* Dynamic Underline */}
-          <motion.div
-            className="h-[3px] origin-left mb-16 max-w-[320px]"
-            style={{ backgroundColor: 'var(--color-accent)' }}
-            variants={barVariants}
-            initial="hidden"
-            animate={isHeadingInView ? 'visible' : 'hidden'}
-          />
-
-          {/* Bento Grid */}
-          <motion.div
-            ref={gridRef}
-            variants={containerVariants}
-            initial="hidden"
-            animate={isGridInView ? 'visible' : 'hidden'}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-auto"
-          >
-            {/* Card 1 — Tall Column */}
-            <motion.div
-              variants={cardVariants}
-              className="bg-[#141414] border border-[#262626] p-8 flex flex-col justify-between lg:row-span-2 group hover:border-[#444] transition-colors"
-            >
-              <div>
-                <span className="font-['Fragment_Mono'] text-[10px] text-[#555] uppercase block mb-4">
-                  [ VERIFIED TESTIMONIAL 01 ]
-                </span>
-                <p className="font-['Figtree'] text-white/90 text-base sm:text-lg leading-relaxed">
-                  {TESTIMONIALS_DATA[0].quote}
-                </p>
-              </div>
-              <div className="mt-8 pt-6 border-t border-[#222] flex items-center gap-4">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-['Tektur'] text-xs font-bold text-[#0e0e0e]"
-                  style={{ backgroundColor: 'var(--color-accent)' }}
-                >
-                  {TESTIMONIALS_DATA[0].initials}
-                </div>
-                <div>
-                  <p className="font-['Tektur'] text-white text-xs font-bold uppercase tracking-wider">
-                    {TESTIMONIALS_DATA[0].name}
-                  </p>
-                  <p className="font-['Fragment_Mono'] text-white/40 text-[10px] tracking-wider uppercase mt-0.5">
-                    {TESTIMONIALS_DATA[0].title}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Card 2 */}
-            <motion.div
-              variants={cardVariants}
-              className="bg-[#141414] border border-[#262626] p-8 flex flex-col justify-between group hover:border-[#444] transition-colors"
-            >
-              <div>
-                <span className="font-['Fragment_Mono'] text-[10px] text-[#555] uppercase block mb-4">
-                  [ VERIFIED TESTIMONIAL 02 ]
-                </span>
-                <p className="font-['Figtree'] text-white/90 text-base leading-relaxed">
-                  {TESTIMONIALS_DATA[1].quote}
-                </p>
-              </div>
-              <div className="mt-8 pt-6 border-t border-[#222] flex items-center gap-4">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-['Tektur'] text-xs font-bold text-[#0e0e0e]"
-                  style={{ backgroundColor: 'var(--color-accent)' }}
-                >
-                  {TESTIMONIALS_DATA[1].initials}
-                </div>
-                <div>
-                  <p className="font-['Tektur'] text-white text-xs font-bold uppercase tracking-wider">
-                    {TESTIMONIALS_DATA[1].name}
-                  </p>
-                  <p className="font-['Fragment_Mono'] text-white/40 text-[10px] tracking-wider uppercase mt-0.5">
-                    {TESTIMONIALS_DATA[1].title}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Graphic Technical Badge */}
-            <motion.div
-              variants={cardVariants}
-              className="bg-[#181818] border border-[#262626] p-8 flex flex-col justify-between items-center text-center"
-            >
-              <div className="font-['Fragment_Mono'] text-[10px] text-[#666] uppercase tracking-widest w-full text-left">
-                [ PRODUCTION STANDARDS ]
-              </div>
-              <div className="my-6">
-                <div
-                  className="w-20 h-20 rounded-full border-2 border-dashed flex items-center justify-center p-2 mx-auto"
-                  style={{ borderColor: 'var(--color-accent)' }}
-                >
-                  <span className="font-['Tektur'] text-2xl font-bold text-white">100%</span>
-                </div>
-                <div className="font-['Tektur'] text-sm font-bold uppercase text-white mt-4">
-                  ZERO REGRESSION POLICY
-                </div>
-                <div className="font-['Fragment_Mono'] text-[10px] text-[#777] uppercase mt-1">
-                  TYPE SAFETY · TELEMETRY TRACED
-                </div>
-              </div>
-              <div className="font-['Fragment_Mono'] text-[9px] text-[#555] uppercase">
-                MONODRIFT CERTIFIED BUILD
-              </div>
-            </motion.div>
-
-            {/* Card 3 */}
-            <motion.div
-              variants={cardVariants}
-              className="bg-[#141414] border border-[#262626] p-8 flex flex-col justify-between group hover:border-[#444] transition-colors"
-            >
-              <div>
-                <span className="font-['Fragment_Mono'] text-[10px] text-[#555] uppercase block mb-4">
-                  [ VERIFIED TESTIMONIAL 03 ]
-                </span>
-                <p className="font-['Figtree'] text-white/90 text-base leading-relaxed">
-                  {TESTIMONIALS_DATA[2].quote}
-                </p>
-              </div>
-              <div className="mt-8 pt-6 border-t border-[#222] flex items-center gap-4">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-['Tektur'] text-xs font-bold text-[#0e0e0e]"
-                  style={{ backgroundColor: 'var(--color-accent)' }}
-                >
-                  {TESTIMONIALS_DATA[2].initials}
-                </div>
-                <div>
-                  <p className="font-['Tektur'] text-white text-xs font-bold uppercase tracking-wider">
-                    {TESTIMONIALS_DATA[2].name}
-                  </p>
-                  <p className="font-['Fragment_Mono'] text-white/40 text-[10px] tracking-wider uppercase mt-0.5">
-                    {TESTIMONIALS_DATA[2].title}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Card 4 — Spanning 2 columns */}
-            <motion.div
-              variants={cardVariants}
-              className="bg-[#141414] border border-[#262626] p-8 flex flex-col justify-between lg:col-span-2 group hover:border-[#444] transition-colors"
-            >
-              <div>
-                <span className="font-['Fragment_Mono'] text-[10px] text-[#555] uppercase block mb-4">
-                  [ VERIFIED TESTIMONIAL 04 ]
-                </span>
-                <p className="font-['Figtree'] text-white/90 text-base sm:text-xl leading-relaxed max-w-[720px]">
-                  {TESTIMONIALS_DATA[3].quote}
-                </p>
-              </div>
-              <div className="mt-8 pt-6 border-t border-[#222] flex items-center gap-4">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-['Tektur'] text-xs font-bold text-[#0e0e0e]"
-                  style={{ backgroundColor: 'var(--color-accent)' }}
-                >
-                  {TESTIMONIALS_DATA[3].initials}
-                </div>
-                <div>
-                  <p className="font-['Tektur'] text-white text-xs font-bold uppercase tracking-wider">
-                    {TESTIMONIALS_DATA[3].name}
-                  </p>
-                  <p className="font-['Fragment_Mono'] text-white/40 text-[10px] tracking-wider uppercase mt-0.5">
-                    {TESTIMONIALS_DATA[3].title}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
+          <div className="flex flex-col items-start gap-5 lg:items-end">
+            <p className="max-w-sm text-sm leading-relaxed text-muted">{TESTIMONIALS_INTRO.intro}</p>
+            <MarqueeToggle
+              paused={isPaused}
+              onToggle={() => setPaused((value) => !value)}
+              label="Manual scroll"
+            />
+          </div>
         </div>
+      </div>
+
+      <div className="flex flex-col gap-6">
+        <Marquee duration={64} paused={isPaused} direction="left" trackClassName="items-stretch">
+          {topRow.map((item) => (
+            <TestimonialCard key={item.id} item={item} />
+          ))}
+        </Marquee>
+
+        <Marquee duration={72} paused={isPaused} direction="right" trackClassName="items-stretch">
+          {bottomRow.map((item) => (
+            <TestimonialCard key={item.id} item={item} />
+          ))}
+        </Marquee>
+      </div>
+
+      <div className="shell pt-12">
+        <a
+          href="#pricing"
+          className="group inline-flex items-center gap-3 text-muted transition-colors hover:text-accent"
+        >
+          <MonoArrow className="h-3 w-2 transition-transform duration-300 group-hover:translate-x-1" />
+          <span className="mono-label">SEE WHAT IT COSTS</span>
+        </a>
       </div>
     </section>
   );

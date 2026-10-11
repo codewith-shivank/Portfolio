@@ -1,34 +1,32 @@
-import { motion } from 'framer-motion';
-import { PERSONAL_DETAILS } from '../data/portfolioData';
+import MonoArrow from './ui/MonoArrow';
+import { NAV_LINKS, SITE, SOCIAL_LINKS } from '../data/monodrift';
 
-const FOOTER_LINKS = [
-  { label: 'Work', href: '#projects' },
-  { label: 'Profile', href: '#about' },
-  { label: 'Capabilities', href: '#skills' },
-  { label: 'Approach', href: '#process' },
-  { label: 'Results', href: '#results' },
-  { label: 'Words', href: '#testimonials' },
-  { label: 'Notes', href: '#notes' },
-  { label: 'Pricing', href: '#pricing' },
-  { label: 'Contact', href: '#contact' },
-];
+const CURRENT_YEAR = new Date().getFullYear();
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0b0b0b] px-5 pb-8 pt-16 sm:px-8 lg:px-12 border-t border-[#222]">
-      <div className="mx-auto max-w-[1600px]">
-        {/* Top bar with quick navigation & social links */}
-        <div className="flex flex-col lg:flex-row justify-between gap-8 pb-12 border-b border-[#1c1c1c]">
+    <footer className="section-ink-2 border-t border-line pt-16">
+      <div className="shell flex flex-col gap-14 pb-14">
+        <div className="flex flex-col gap-6 border-b border-line pb-10 lg:flex-row lg:items-end lg:justify-between">
+          <a
+            href="#top"
+            className="group flex items-baseline gap-2 text-white transition-colors hover:text-accent"
+          >
+            <span className="display display-xl">{SITE.wordmark}</span>
+            <MonoArrow className="h-5 w-3.5 transition-transform duration-300 group-hover:translate-x-1.5 sm:h-7 sm:w-5" />
+          </a>
+          <span className="kicker text-muted">{SITE.tagline}</span>
+        </div>
+
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.1fr)]">
           <div>
-            <span className="font-['Fragment_Mono'] text-[10px] text-[#555] uppercase tracking-widest block mb-4">
-              [ SITE NAVIGATION ]
-            </span>
-            <nav aria-label="Footer navigation" className="flex flex-wrap gap-x-6 gap-y-3">
-              {FOOTER_LINKS.map((link) => (
+            <span className="kicker text-dim">[ SITEMAP ]</span>
+            <nav aria-label="Footer navigation" className="mt-5 grid grid-cols-2 gap-x-8 gap-y-2.5">
+              {NAV_LINKS.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className="font-['Fragment_Mono'] text-xs uppercase tracking-wider text-[#888] hover:text-white transition-colors"
+                  className="mono-label link-underline text-muted transition-colors hover:text-white"
                 >
                   {link.label}
                 </a>
@@ -36,69 +34,63 @@ export default function Footer() {
             </nav>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div>
+            <span className="kicker text-dim">[ STUDIO ]</span>
+            <div className="mono-label mt-5 flex flex-col gap-2.5 text-muted">
+              {SITE.addressLines.map((line) => (
+                <span key={line}>{line}</span>
+              ))}
+              <span>{SITE.city}</span>
+            </div>
+          </div>
+
+          <div>
+            <span className="kicker text-dim">[ CONTACT ]</span>
+            <div className="mono-label mt-5 flex flex-col gap-2.5">
+              <a href={SITE.emailHref} className="link-underline hover:text-accent">
+                {SITE.email}
+              </a>
+              <a href={SITE.phoneHref} className="link-underline text-muted hover:text-accent">
+                {SITE.phone}
+              </a>
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="link-underline text-muted hover:text-accent"
+                >
+                  {social.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <span className="kicker text-dim">[ NEXT STEP ]</span>
+            <p className="max-w-xs text-sm leading-relaxed text-muted">
+              One call, one page of decisions, and the work starts the same week.
+            </p>
             <a
-              href={PERSONAL_DETAILS.github}
-              target="_blank"
-              rel="noreferrer"
-              className="font-['Fragment_Mono'] text-xs uppercase text-[#888] hover:text-white transition-colors"
+              href="#contact"
+              className="group flex items-center justify-between bg-accent px-5 py-4 text-accent-ink transition-colors hover:bg-white"
             >
-              GitHub &nearr;
-            </a>
-            <a
-              href={PERSONAL_DETAILS.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              className="font-['Fragment_Mono'] text-xs uppercase text-[#888] hover:text-white transition-colors"
-            >
-              LinkedIn &nearr;
-            </a>
-            <a
-              href={`mailto:${PERSONAL_DETAILS.email}`}
-              className="font-['Fragment_Mono'] text-xs uppercase text-[#888] hover:text-white transition-colors"
-            >
-              Email &nearr;
-            </a>
-            <a
-              href="#top"
-              className="font-['Fragment_Mono'] text-xs uppercase tracking-wider px-3 py-1.5 border border-[#2a2a2a] hover:border-white text-white transition-colors"
-            >
-              TOP &uarr;
+              <span className="mono-label font-bold">&gt;&gt; START A PROJECT</span>
+              <MonoArrow className="h-3.5 w-2.5 transition-transform duration-300 group-hover:translate-x-1" />
             </a>
           </div>
         </div>
 
-        {/* Monodrift Massive Footer Brand Graphic */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="overflow-hidden py-10 sm:py-16 select-none"
-          aria-label="Monodrift Shivank Brandmark"
-        >
-          <div className="footer-logo-huge text-[clamp(3.5rem,15vw,13.5rem)] font-bold uppercase tracking-tighter leading-none text-[#1a1a1a] flex items-baseline">
-            <span>{PERSONAL_DETAILS.name}</span>
-            <span style={{ color: 'var(--color-accent)' }}>.</span>
-          </div>
-        </motion.div>
-
-        {/* Bottom Metadata & System Status */}
-        <div className="border-t border-[#1c1c1c] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 font-['Fragment_Mono'] text-[10px] uppercase text-[#666]">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: 'var(--color-accent)' }}
-              />
-              <span className="text-white">SYSTEM ONLINE</span>
-            </div>
-            <span>•</span>
-            <span>MONODRIFT ENGINE 2026</span>
-          </div>
-
-          <div>
-            &copy; 2026 {PERSONAL_DETAILS.fullName}. ALL RIGHTS RESERVED.
+        <div className="flex flex-col gap-4 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <span className="mono-label text-dim">
+            © {CURRENT_YEAR} {SITE.brand}® — {SITE.tagline}
+          </span>
+          <div className="mono-label flex flex-wrap items-center gap-x-6 gap-y-2 text-muted">
+            <span>{SITE.replyTime} reply</span>
+            <a href="#top" className="link-underline hover:text-white">
+              Back to top ↑
+            </a>
           </div>
         </div>
       </div>
