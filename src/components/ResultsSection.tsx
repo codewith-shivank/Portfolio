@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { STATS_METRICS, AWARDS_LIST } from '../data/portfolioData';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -13,98 +14,114 @@ function fadeUp(delay: number) {
 
 export default function ResultsSection() {
   return (
-    <section id="results" className="bg-[#f7f6f3] py-24 sm:py-32">
-      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
+    <section id="results" className="bg-[#f7f6f3] py-24 sm:py-32 text-[#0e0e0e] border-b border-[#d9d8d3]">
+      <div className="max-w-[1600px] mx-auto px-5 sm:px-8 lg:px-12">
         {/* Header area */}
-        <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 lg:gap-16 mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-8 lg:gap-16 mb-20">
           {/* Left: page nav label */}
           <motion.div {...fadeUp(0)}>
-            <span className="font-['Fragment_Mono'] text-xs text-[#6d6d6d] italic">
-              Results
+            <span className="font-['Fragment_Mono'] text-xs text-[#6d6d6d] uppercase tracking-widest block mb-2">
+              [ 05 / RESULTS ]
             </span>
-            <div className="w-16 h-[2px] bg-[#52ff9d] mt-2" />
+            <div
+              className="w-16 h-[2px] mb-4"
+              style={{ backgroundColor: 'var(--color-accent)' }}
+            />
+            <div className="font-['Fragment_Mono'] text-[11px] text-[#888]">
+              METRICS: EMPIRICAL
+            </div>
           </motion.div>
 
           {/* Right: heading + description */}
           <div>
             <motion.span {...fadeUp(0.05)} className="font-['Fragment_Mono'] text-[10px] text-[#6d6d6d] uppercase tracking-[0.1em] block mb-4">
-              [ How confident are we? ]
+              [ HOW CONFIDENT ARE WE? ]
             </motion.span>
 
-            <motion.h2 {...fadeUp(0.1)} className="font-['Tektur'] text-3xl sm:text-4xl lg:text-5xl font-bold uppercase leading-[0.95] text-[#0e0e0e] mb-6">
-              <span className="inline-block bg-[#52ff9d] text-[#0e0e0e] px-1">WHAT WE COUNT</span>
+            <motion.h2 {...fadeUp(0.1)} className="font-['Tektur'] text-3xl sm:text-5xl lg:text-6xl font-bold uppercase leading-[0.92] text-[#0e0e0e] mb-6">
+              <span
+                className="inline-block text-[#0e0e0e] px-2"
+                style={{ backgroundColor: 'var(--color-accent)' }}
+              >
+                WHAT WE COUNT
+              </span>
               <br />
               NOT WHAT WE CLAIM.
             </motion.h2>
 
-            {/* Billing/info row */}
-            <motion.div {...fadeUp(0.15)} className="grid grid-cols-2 gap-8 mt-8">
+            <motion.div {...fadeUp(0.15)} className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8 border-t border-[#d9d8d3] pt-6">
               <div>
                 <span className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider block mb-1">
-                  Measured over
+                  MEASURED OVER
                 </span>
-                <p className="font-['Tektur'] text-sm font-bold uppercase text-[#262626]">3 years</p>
-                <p className="font-['Figtree'] text-xs text-[#8a8a8a] mt-0.5">All projects</p>
-                <p className="font-['Figtree'] text-xs text-[#8a8a8a]">Every client</p>
+                <p className="font-['Tektur'] text-lg font-bold uppercase text-[#262626]">4+ YEARS IN PRODUCTION</p>
+                <p className="font-['Figtree'] text-xs text-[#8a8a8a] mt-0.5">80+ Repositories · Every Client · Real Workloads</p>
               </div>
               <div>
-                <p className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider leading-relaxed">
-                  Results speak louder than pitches. Every number here comes from delivered work, not projections.
+                <p className="font-['Fragment_Mono'] text-xs text-[#6d6d6d] uppercase tracking-wider leading-relaxed">
+                  Results speak louder than pitches. Every number here comes from delivered work, continuous telemetry, and verified production performance.
                 </p>
               </div>
             </motion.div>
           </div>
         </div>
 
-        {/* Stats grid - 3 column bento layout */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+        {/* Stats Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
           {/* Left column */}
-          <div className="space-y-4 lg:space-y-6">
-            {/* Stat: 78 Projects */}
-            <motion.div {...fadeUp(0.1)} className="border border-[#e6e6e3] bg-white/50 p-6 sm:p-8">
+          <div className="space-y-6">
+            <motion.div {...fadeUp(0.1)} className="border border-[#d9d8d3] bg-white/70 p-6 sm:p-8">
               <span className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider block mb-3">
-                [ Projects ]
+                [ PRODUCTION WORK ]
               </span>
-              {/* Icon placeholder */}
-              <div className="w-16 h-16 rounded-full border border-[#e6e6e3] flex items-center justify-center mb-4">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" className="text-[#c4c4c4]">
-                  <circle cx="14" cy="14" r="10" stroke="currentColor" strokeWidth="1" strokeDasharray="4 3" />
-                  <circle cx="14" cy="14" r="4" stroke="currentColor" strokeWidth="1" />
-                </svg>
+              <div className="flex items-baseline gap-2 mb-2">
+                <span
+                  className="font-['Tektur'] text-5xl sm:text-6xl font-bold"
+                  style={{ color: 'var(--color-accent)' }}
+                >
+                  {STATS_METRICS[0].number}
+                </span>
+                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a] uppercase">PROJECTS</span>
               </div>
-              <div className="flex items-baseline gap-1 mb-2">
-                <span className="font-['Tektur'] text-5xl sm:text-6xl font-bold text-[#52ff9d]">78</span>
-                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a] uppercase">projects</span>
-              </div>
-              <div className="w-full h-[1px] bg-[#52ff9d] mb-3" />
-              <p className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider leading-relaxed">
-                Completed projects across branding, web, and campaign work.
+              <div
+                className="w-full h-[1px] mb-3"
+                style={{ backgroundColor: 'var(--color-accent)' }}
+              />
+              <p className="font-['Fragment_Mono'] text-xs text-[#666] uppercase tracking-wider leading-relaxed">
+                {STATS_METRICS[0].description}
               </p>
             </motion.div>
 
-            {/* Stat: 24 Hours */}
-            <motion.div {...fadeUp(0.2)} className="border border-[#e6e6e3] bg-white/50 p-6 sm:p-8">
+            <motion.div {...fadeUp(0.2)} className="border border-[#d9d8d3] bg-white/70 p-6 sm:p-8">
               <span className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider block mb-3">
-                [ Speed ]
+                [ RAPID PROTOTYPING ]
               </span>
-              <div className="flex items-baseline gap-1 mb-2">
-                <span className="font-['Tektur'] text-5xl sm:text-6xl font-bold text-[#52ff9d]">24</span>
-                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a]">Hours</span>
+              <div className="flex items-baseline gap-2 mb-2">
+                <span
+                  className="font-['Tektur'] text-5xl sm:text-6xl font-bold"
+                  style={{ color: 'var(--color-accent)' }}
+                >
+                  {STATS_METRICS[1].number}
+                </span>
+                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a] uppercase">VELOCITY</span>
               </div>
-              <div className="w-full h-[1px] bg-[#52ff9d] mb-3" />
-              <p className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider leading-relaxed">
-                Average first draft turnaround for active subscriptions.
+              <div
+                className="w-full h-[1px] mb-3"
+                style={{ backgroundColor: 'var(--color-accent)' }}
+              />
+              <p className="font-['Fragment_Mono'] text-xs text-[#666] uppercase tracking-wider leading-relaxed">
+                {STATS_METRICS[1].description}
               </p>
             </motion.div>
           </div>
 
-          {/* Center column */}
-          <motion.div {...fadeUp(0.15)} className="border border-[#e6e6e3] bg-white/50 p-6 sm:p-8 flex flex-col justify-between min-h-[400px]">
+          {/* Center Column: Direct Call to Action Card */}
+          <motion.div {...fadeUp(0.15)} className="border border-[#d9d8d3] bg-white p-6 sm:p-8 flex flex-col justify-between min-h-[420px]">
             <div>
-              <span className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] italic block mb-6">
-                Between us, the truth:
+              <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a] italic block mb-6">
+                BETWEEN US, THE TRUTH:
               </span>
-              <h3 className="font-['Tektur'] text-2xl sm:text-3xl font-bold uppercase text-[#0e0e0e] leading-[1.05]">
+              <h3 className="font-['Tektur'] text-2xl sm:text-4xl font-bold uppercase text-[#0e0e0e] leading-[1.05]">
                 EVERY NUMBER
                 <br />
                 HERE STARTED
@@ -113,66 +130,87 @@ export default function ResultsSection() {
               </h3>
             </div>
 
-            {/* Icon placeholder */}
-            <div className="flex justify-center my-8">
-              <div className="w-20 h-20 rounded-full border border-[#e6e6e3] flex items-center justify-center">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-[#c4c4c4]">
-                  <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="1" />
-                  <circle cx="16" cy="16" r="6" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
-                  <circle cx="16" cy="16" r="2" fill="currentColor" />
-                </svg>
+            <div className="flex justify-center my-6">
+              <div
+                className="w-24 h-24 rounded-full border-2 flex items-center justify-center p-2"
+                style={{ borderColor: 'var(--color-accent)' }}
+              >
+                <div
+                  className="w-16 h-16 rounded-full border border-dashed flex items-center justify-center animate-spin"
+                  style={{
+                    borderColor: '#999',
+                    animationDuration: '10s',
+                  }}
+                >
+                  <span
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: 'var(--color-accent)' }}
+                  />
+                </div>
               </div>
             </div>
 
             <div>
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 px-5 py-3 bg-[#52ff9d] text-[#0e0e0e] font-['Tektur'] font-bold text-sm uppercase tracking-wide hover:bg-[#3dcc7d] transition-colors w-full justify-center"
+                className="inline-flex items-center gap-2 px-6 py-4 font-['Tektur'] font-bold text-sm uppercase tracking-wide transition-colors w-full justify-center"
+                style={{
+                  backgroundColor: 'var(--color-accent)',
+                  color: '#0e0e0e',
+                }}
               >
-                <span>{'>'}</span>
-                <span>START A PROJECT</span>
+                <span>&gt;</span>
+                <span>START A PROJECT WITH SHIVANK</span>
               </a>
-              <p className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider mt-3">
-                First step — a short call.
+              <p className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider text-center mt-3">
+                DIRECT CHAT · NO INTERMEDIARIES
               </p>
             </div>
           </motion.div>
 
           {/* Right column */}
-          <div className="space-y-4 lg:space-y-6">
-            {/* Stat: 95% */}
-            <motion.div {...fadeUp(0.2)} className="border border-[#e6e6e3] bg-white/50 p-6 sm:p-8">
+          <div className="space-y-6">
+            <motion.div {...fadeUp(0.2)} className="border border-[#d9d8d3] bg-white/70 p-6 sm:p-8">
               <span className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider block mb-3">
-                [ Retention ]
+                [ CLIENT RETENTION ]
               </span>
-              {/* Icon placeholder */}
-              <div className="w-16 h-16 rounded-full border border-[#e6e6e3] flex items-center justify-center mb-4">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" className="text-[#c4c4c4]">
-                  <path d="M14 4 L24 14 L14 24 L4 14 Z" stroke="currentColor" strokeWidth="1" fill="none" />
-                  <circle cx="14" cy="14" r="4" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" />
-                </svg>
+              <div className="flex items-baseline gap-2 mb-2">
+                <span
+                  className="font-['Tektur'] text-5xl sm:text-6xl font-bold"
+                  style={{ color: 'var(--color-accent)' }}
+                >
+                  {STATS_METRICS[2].number}
+                </span>
+                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a] uppercase">RETURN RATE</span>
               </div>
-              <div className="flex items-baseline gap-1 mb-2">
-                <span className="font-['Tektur'] text-5xl sm:text-6xl font-bold text-[#52ff9d]">95</span>
-                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a]">%</span>
-              </div>
-              <div className="w-full h-[1px] bg-[#52ff9d] mb-3" />
-              <p className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider leading-relaxed">
-                Of clients return with a second project within 12 months.
+              <div
+                className="w-full h-[1px] mb-3"
+                style={{ backgroundColor: 'var(--color-accent)' }}
+              />
+              <p className="font-['Fragment_Mono'] text-xs text-[#666] uppercase tracking-wider leading-relaxed">
+                {STATS_METRICS[2].description}
               </p>
             </motion.div>
 
-            {/* Stat: 100 */}
-            <motion.div {...fadeUp(0.25)} className="border border-[#e6e6e3] bg-white/50 p-6 sm:p-8">
+            <motion.div {...fadeUp(0.25)} className="border border-[#d9d8d3] bg-white/70 p-6 sm:p-8">
               <span className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider block mb-3">
-                [ Growth ]
+                [ ORGANIC GROWTH ]
               </span>
-              <div className="flex items-baseline gap-1 mb-2">
-                <span className="font-['Tektur'] text-5xl sm:text-6xl font-bold text-[#52ff9d]">100</span>
+              <div className="flex items-baseline gap-2 mb-2">
+                <span
+                  className="font-['Tektur'] text-5xl sm:text-6xl font-bold"
+                  style={{ color: 'var(--color-accent)' }}
+                >
+                  {STATS_METRICS[3].number}
+                </span>
+                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a] uppercase">REFERRAL</span>
               </div>
-              <div className="w-full h-[1px] bg-[#52ff9d] mb-3" />
-              <p className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider leading-relaxed">
-                Pure organically referral-driven client acquisition.
+              <div
+                className="w-full h-[1px] mb-3"
+                style={{ backgroundColor: 'var(--color-accent)' }}
+              />
+              <p className="font-['Fragment_Mono'] text-xs text-[#666] uppercase tracking-wider leading-relaxed">
+                {STATS_METRICS[3].description}
               </p>
             </motion.div>
           </div>
@@ -180,43 +218,61 @@ export default function ResultsSection() {
 
         {/* Awards heading */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mt-24 sm:mt-32"
+          transition={{ duration: 0.7 }}
+          className="mt-12"
         >
-          <h2 className="font-['Tektur'] text-[clamp(2rem,7vw,6rem)] font-bold uppercase text-[#0e0e0e] leading-[0.95] tracking-[-0.02em]">
-            AWARDS &amp; RECOGNITION
-          </h2>
-          <div className="w-full h-[2px] bg-[#52ff9d] mt-4" />
+          <div className="flex items-center justify-between">
+            <h3 className="font-['Tektur'] text-[clamp(1.8rem,5.5vw,4.5rem)] font-bold uppercase text-[#0e0e0e] leading-[0.95] tracking-[-0.02em]">
+              AWARDS &amp; RECOGNITION
+            </h3>
+            <span className="font-['Fragment_Mono'] text-xs text-[#888] uppercase hidden sm:inline">
+              INDUSTRY HONORS
+            </span>
+          </div>
+          <div
+            className="w-full h-[2px] mt-4"
+            style={{ backgroundColor: 'var(--color-accent)' }}
+          />
         </motion.div>
 
         {/* Awards list */}
-        <div className="mt-12 space-y-0">
-          {[
-            { award: 'Site of the Day', org: 'Awwwards', year: '2025' },
-            { award: 'Best UI Design', org: 'CSS Design Awards', year: '2025' },
-            { award: 'Developer Award', org: 'Awwwards', year: '2024' },
-            { award: 'FWA of the Day', org: 'FWA', year: '2024' },
-          ].map((item, i) => (
+        <div className="mt-8 space-y-0">
+          {AWARDS_LIST.map((item, i) => (
             <motion.div
-              key={i}
+              key={item.award}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="flex items-center justify-between py-5 border-b border-[#e6e6e3] group hover:border-[#52ff9d] transition-colors"
+              transition={{ duration: 0.5, delay: i * 0.06 }}
+              className="flex items-center justify-between py-5 border-b border-[#d9d8d3] group hover:border-[#222] transition-colors"
             >
               <div className="flex items-center gap-6">
-                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a]">{String(i + 1).padStart(2, '0')}</span>
-                <span className="font-['Tektur'] text-base sm:text-lg font-bold uppercase text-[#262626] group-hover:text-[#52ff9d] transition-colors">
-                  {item.award}
+                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a]">
+                  {String(i + 1).padStart(2, '0')}
                 </span>
+                <div>
+                  <span className="font-['Tektur'] text-base sm:text-xl font-bold uppercase text-[#262626] group-hover:underline">
+                    {item.award}
+                  </span>
+                  <span className="hidden md:inline font-['Fragment_Mono'] text-[10px] text-[#777] ml-3">
+                    [{item.project}]
+                  </span>
+                </div>
               </div>
               <div className="flex items-center gap-6">
-                <span className="font-['Figtree'] text-sm text-[#6d6d6d]">{item.org}</span>
-                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a]">{item.year}</span>
+                <span className="font-['Figtree'] text-xs sm:text-sm text-[#555] font-semibold">{item.org}</span>
+                <span
+                  className="font-['Fragment_Mono'] text-xs px-2 py-0.5 font-bold"
+                  style={{
+                    backgroundColor: 'var(--color-accent)',
+                    color: '#0e0e0e',
+                  }}
+                >
+                  {item.year}
+                </span>
               </div>
             </motion.div>
           ))}

@@ -17,51 +17,41 @@ interface FAQItem {
 
 const faqItems: FAQItem[] = [
   {
-    question: "WHAT'S INCLUDED WITH THIS PORTFOLIO TEMPLATE?",
+    question: "WHAT TECHNOLOGIES DO YOU PRIMARILY ARCHITECT WITH?",
     answer:
-      "The template includes a fully designed Home page, Projects showcase, Blog section, About page, and Contact form. Simply add your own content, customize the styling, and deploy.",
+      "On the client, I engineer with React 19, TypeScript strict mode, Next.js, Tailwind CSS v4, Framer Motion, and hardware-accelerated WebGL / Three.js. On the backend, I specialize in Node.js, Fastify/Express, Redis Streams, BullMQ, PostgreSQL, MongoDB, and WebSocket real-time clusters.",
   },
   {
-    question: "CAN I TRY BEFORE BUYING?",
+    question: "WHAT DOES SPRINT VELOCITY AND TURNAROUND LOOK LIKE?",
     answer:
-      "Yes — a live preview is available so you can explore every page and interaction before committing. The demo showcases all sections with placeholder content.",
+      "Most scoped requests receive their first working staging build within 24 to 48 hours. I work with trunk-based continuous integration, providing live preview URLs for every incremental milestone.",
   },
   {
-    question: "DO I NEED TO WRITE CODE?",
+    question: "CAN YOU HANDLE BOTH THE INTERFACE CRAFT AND DISTRIBUTED SYSTEMS?",
     answer:
-      "Basic familiarity with React and Tailwind CSS is helpful for customization, but the template is structured so you can swap content by editing simple data arrays and text strings — no deep coding required.",
+      "Yes—that is my core differentiator. I eliminate the friction between designers and backend engineers by delivering both pixel-perfect 60 FPS interactions and resilient, transactional backend architectures.",
   },
   {
-    question: "CAN I USE MY OWN CONTENT AND IMAGES?",
+    question: "HOW DOES THE FLAT SPRINT RETAINER WORK?",
     answer:
-      "Absolutely. Every image, text block, and color is fully customizable. Drop in your own assets, update the copy, and the layout adapts automatically.",
+      "Instead of unpredictability with hourly invoices or scope arguments, you subscribe to a flat monthly plan. You load tasks into our board, and I execute them in priority order. When your queue is quiet, you can pause with zero penalty.",
   },
   {
-    question: "DOES IT WORK ON MOBILE AND TABLET?",
+    question: "HOW DO WE COMMUNICATE AND TRACK PROGRESS?",
     answer:
-      "Yes. The template is fully responsive across all breakpoints — from mobile phones to ultra-wide monitors. Every section has been tested for touch interaction and readability.",
+      "You receive direct private access via Slack or Discord, along with GitHub pull requests and Loom video walkthroughs. No account managers or bureaucratic layers.",
   },
   {
-    question: "WHAT LICENSE DO I GET?",
+    question: "ARE ALL PROJECTS BUILT ACCORDING TO ACCESSIBILITY AND WEB VITALS?",
     answer:
-      "You receive a standard license that covers one personal or commercial project. Extended licenses for multi-use or client work are available upon request.",
-  },
-  {
-    question: "DO FUTURE UPDATES COME WITH THE TEMPLATE?",
-    answer:
-      "Yes. All future updates, bug fixes, and new component additions are included at no extra cost for the lifetime of the product.",
-  },
-  {
-    question: "IS THERE A QUICK START GUIDE?",
-    answer:
-      "A comprehensive quick-start guide is included with setup instructions, customization tips, and deployment walkthroughs for popular platforms like Vercel and Netlify.",
+      "Without exception. Every build targets 95-100 on Google Lighthouse, sub-50ms Time-to-Interactive (TTI), WCAG AAA contrast accessibility, and zero layout shifts (CLS).",
   },
 ];
 
 export default function FAQSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-  const [openIndex, setOpenIndex] = useState<number | null>(2); // 3rd item open by default
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const toggleItem = (index: number) => {
     setOpenIndex((prev) => (prev === index ? null : index));
@@ -71,41 +61,40 @@ export default function FAQSection() {
     <section
       ref={sectionRef}
       id="faq"
-      className="relative bg-[#f7f6f3] text-[#1a1a1a] py-24 md:py-32 overflow-hidden"
+      className="relative bg-[#f7f6f3] text-[#1a1a1a] py-24 md:py-32 overflow-hidden border-b border-[#d9d8d3]"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
+      <div className="max-w-[1600px] mx-auto px-5 sm:px-8 lg:px-12">
         {/* Header */}
         <motion.div
-          className="mb-16 md:mb-20"
+          className="mb-16"
           variants={fadeUp}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           custom={0}
         >
-          <span className="font-['Fragment_Mono'] text-xs tracking-widest uppercase text-[#1a1a1a]/50 block mb-6">
-            [ FREQUENTLY ASKED ]
+          <span className="font-['Fragment_Mono'] text-xs tracking-widest uppercase text-[#1a1a1a]/50 block mb-4">
+            [ FREQUENTLY ASKED QUESTIONS ]
           </span>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <h2 className="font-['Tektur'] text-4xl md:text-5xl lg:text-6xl font-bold uppercase leading-[1.1] tracking-tight">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
+            <h2 className="font-['Tektur'] text-3xl sm:text-5xl lg:text-6xl font-bold uppercase leading-[1.0] tracking-tight">
               GOT{" "}
-              <span className="inline-block bg-[#52ff9d] text-[#1a1a1a] px-3 py-1">
+              <span
+                className="inline-block text-[#1a1a1a] px-2"
+                style={{ backgroundColor: 'var(--color-accent)' }}
+              >
                 QUESTIONS?
               </span>
             </h2>
-            <div className="flex items-end">
-              <p className="font-['Figtree'] text-sm text-[#1a1a1a]/60 leading-relaxed max-w-md">
-                Everything you need to know about the template, licensing, and
-                how to get started. Can't find what you're looking for? Feel free
-                to reach out.
-              </p>
-            </div>
+            <p className="font-['Figtree'] text-sm sm:text-base text-[#1a1a1a]/70 leading-relaxed max-w-lg">
+              Everything you need to know about working with Shivank, codebase ownership, guarantees, and availability.
+            </p>
           </div>
         </motion.div>
 
         {/* FAQ Accordion */}
         <motion.div
-          className="border-t border-[#1a1a1a]/10"
+          className="border-t border-[#1a1a1a]/10 divide-y divide-[#1a1a1a]/10"
           variants={fadeUp}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -115,59 +104,40 @@ export default function FAQSection() {
             const isOpen = openIndex === index;
 
             return (
-              <div key={index} className="border-b border-[#1a1a1a]/10">
+              <div key={index}>
                 <button
                   onClick={() => toggleItem(index)}
-                  className={`w-full flex items-center justify-between py-5 md:py-6 px-4 md:px-6 text-left transition-colors duration-300 cursor-pointer group ${
-                    isOpen
-                      ? "bg-[#52ff9d] text-[#1a1a1a]"
-                      : "bg-transparent text-[#1a1a1a] hover:bg-[#52ff9d]/10"
-                  }`}
+                  className="w-full flex items-center justify-between py-6 px-4 md:px-6 text-left transition-colors duration-200 cursor-pointer group hover:bg-black/5"
+                  style={{
+                    backgroundColor: isOpen ? 'var(--color-accent)' : 'transparent',
+                    color: '#1a1a1a',
+                  }}
                 >
-                  <span
-                    className={`font-['Tektur'] text-sm md:text-base uppercase tracking-wide font-semibold pr-4 ${
-                      isOpen ? "text-[#1a1a1a]" : "text-[#1a1a1a]/80"
-                    }`}
-                  >
+                  <span className="font-['Tektur'] text-base md:text-lg uppercase tracking-wide font-bold pr-4">
                     {item.question}
                   </span>
 
-                  {/* Chevron icon */}
                   <motion.span
                     animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="flex-shrink-0"
+                    transition={{ duration: 0.25 }}
+                    className="flex-shrink-0 font-['Fragment_Mono'] text-sm"
                   >
-                    <svg
-                      className={`w-5 h-5 transition-colors duration-300 ${
-                        isOpen ? "text-[#1a1a1a]" : "text-[#1a1a1a]/40"
-                      }`}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    {isOpen ? '—' : '+'}
                   </motion.span>
                 </button>
 
-                {/* Expandable answer */}
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] as const }}
-                      className="overflow-hidden bg-[#52ff9d]"
+                      transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as const }}
+                      className="overflow-hidden"
+                      style={{ backgroundColor: 'var(--color-accent)' }}
                     >
                       <div className="px-4 md:px-6 pb-6 pt-0">
-                        <p className="font-['Figtree'] text-sm md:text-base text-[#1a1a1a]/80 leading-relaxed max-w-2xl">
+                        <p className="font-['Figtree'] text-sm md:text-base text-[#1a1a1a]/90 font-medium leading-relaxed max-w-3xl border-t border-black/10 pt-4">
                           {item.answer}
                         </p>
                       </div>

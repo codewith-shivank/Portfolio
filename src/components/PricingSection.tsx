@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 
 const fadeUp = {
@@ -12,9 +12,9 @@ const fadeUp = {
 
 const features = [
   {
-    label: "Active requests",
+    label: "Active sprint requests",
     standard: "One at a time",
-    pro: "Two at a time",
+    pro: "Two parallel tracks",
   },
   {
     label: "Average turnaround",
@@ -22,23 +22,47 @@ const features = [
     pro: "24 hours",
   },
   {
-    label: "Branding, web, campaigns",
+    label: "Architecture & System Design",
+    standard: "Included",
+    pro: "Included (Priority)",
+  },
+  {
+    label: "Full-Stack Development (React, Node, TS)",
     standard: "Included",
     pro: "Included",
+  },
+  {
+    label: "3D / WebGL / Canvas Motion Engineering",
+    standard: "Add-on",
+    pro: "Included",
+  },
+  {
+    label: "Direct Slack / Discord Access with Shivank",
+    standard: "Async daily",
+    pro: "Real-time sync",
+  },
+  {
+    label: "Pause or cancel anytime",
+    standard: "Yes",
+    pro: "Yes",
   },
 ];
 
 export default function PricingSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'quarterly'>('monthly');
+
+  const standardPrice = billingCycle === 'monthly' ? '$4,995' : '$4,250';
+  const proPrice = billingCycle === 'monthly' ? '$7,995' : '$6,800';
 
   return (
     <section
       ref={sectionRef}
       id="pricing"
-      className="relative bg-[#f7f6f3] text-[#1a1a1a] py-24 md:py-32 overflow-hidden"
+      className="relative bg-[#f7f6f3] text-[#1a1a1a] py-24 md:py-32 overflow-hidden border-b border-[#d9d8d3]"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
+      <div className="max-w-[1600px] mx-auto px-5 sm:px-8 lg:px-12">
         {/* Top grid: nav sidebar + content */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           {/* Left sidebar nav */}
@@ -50,14 +74,36 @@ export default function PricingSection() {
             custom={0}
           >
             <div className="sticky top-32">
-              <span className="inline-block font-['Fragment_Mono'] text-xs tracking-widest uppercase text-[#1a1a1a]/50 mb-6">
-                [ NAVIGATION ]
+              <span className="inline-block font-['Fragment_Mono'] text-xs tracking-widest uppercase text-[#1a1a1a]/50 mb-2">
+                [ 08 / PRICING &amp; PLANS ]
               </span>
-              <nav className="flex flex-col gap-3">
-                <span className="font-['Tektur'] text-sm uppercase tracking-wider font-bold text-[#1a1a1a] border-b-2 border-[#52ff9d] pb-1 w-fit">
-                  Pricing
-                </span>
-              </nav>
+              <div
+                className="w-16 h-[2px] mb-4"
+                style={{ backgroundColor: 'var(--color-accent)' }}
+              />
+              <p className="font-['Fragment_Mono'] text-[11px] text-[#777] uppercase leading-relaxed">
+                TRANSPARENT VALUE. PREDICTABLE ENGINEERING RETENTION.
+              </p>
+
+              {/* Billing Switcher */}
+              <div className="mt-6 p-1 bg-[#eae9e4] border border-[#d6d5ce] flex items-center rounded-sm max-w-xs">
+                <button
+                  onClick={() => setBillingCycle('monthly')}
+                  className={`flex-1 py-1.5 font-['Fragment_Mono'] text-[10px] uppercase transition-colors ${
+                    billingCycle === 'monthly' ? 'bg-white text-black font-bold shadow-sm' : 'text-[#777]'
+                  }`}
+                >
+                  Monthly
+                </button>
+                <button
+                  onClick={() => setBillingCycle('quarterly')}
+                  className={`flex-1 py-1.5 font-['Fragment_Mono'] text-[10px] uppercase transition-colors ${
+                    billingCycle === 'quarterly' ? 'bg-white text-black font-bold shadow-sm' : 'text-[#777]'
+                  }`}
+                >
+                  Quarterly (-15%)
+                </button>
+              </div>
             </div>
           </motion.div>
 
@@ -70,13 +116,13 @@ export default function PricingSection() {
               animate={isInView ? "visible" : "hidden"}
               custom={1}
             >
-              <span className="font-['Fragment_Mono'] text-xs tracking-widest uppercase text-[#1a1a1a]/50 block mb-10">
+              <span className="font-['Fragment_Mono'] text-xs tracking-widest uppercase text-[#1a1a1a]/50 block mb-6">
                 [ WHAT DOES IT COST? ]
               </span>
             </motion.div>
 
             {/* Heading + details row */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-20">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16">
               {/* Large heading with chevrons */}
               <motion.div
                 className="lg:col-span-7 relative"
@@ -85,54 +131,51 @@ export default function PricingSection() {
                 animate={isInView ? "visible" : "hidden"}
                 custom={2}
               >
-                {/* Decorative green chevrons */}
-                <div className="absolute -left-4 md:-left-12 top-1/2 -translate-y-1/2 text-[#52ff9d] font-['Tektur'] text-6xl md:text-8xl font-bold opacity-30 select-none pointer-events-none hidden md:block">
-                  &gt;&gt;
-                </div>
-
-                <h2 className="font-['Tektur'] text-4xl md:text-5xl lg:text-6xl font-bold uppercase leading-[1.1] tracking-tight">
-                  <span className="inline-block bg-[#52ff9d] text-[#1a1a1a] px-3 py-1 italic mb-2">
+                <h2 className="font-['Tektur'] text-3xl sm:text-5xl lg:text-6xl font-bold uppercase leading-[1.0] tracking-tight">
+                  <span
+                    className="inline-block text-[#1a1a1a] px-2 mb-2"
+                    style={{ backgroundColor: 'var(--color-accent)' }}
+                  >
                     ONE FLAT FEE.
                   </span>
                   <br />
-                  <span className="italic">NO SCOPE CREEP.</span>
+                  <span>NO SCOPE CREEP.</span>
                   <br />
-                  <span className="italic">NO INVOICES.</span>
+                  <span>NO INVOICES.</span>
                 </h2>
               </motion.div>
 
               {/* Details columns */}
               <motion.div
-                className="lg:col-span-5 flex flex-col justify-end gap-8"
+                className="lg:col-span-5 flex flex-col justify-end gap-6"
                 variants={fadeUp}
                 initial="hidden"
                 animate={isInView ? "visible" : "hidden"}
                 custom={3}
               >
                 {/* Billing & Commitment */}
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-6 border-b border-[#d6d5ce] pb-4">
                   <div>
                     <span className="font-['Fragment_Mono'] text-[10px] tracking-widest uppercase text-[#1a1a1a]/50 block mb-1">
                       Billing
                     </span>
-                    <span className="font-['Tektur'] text-sm uppercase font-semibold">
-                      Monthly, flat
+                    <span className="font-['Tektur'] text-sm uppercase font-bold text-[#111]">
+                      Flat Subscription
                     </span>
                   </div>
                   <div>
                     <span className="font-['Fragment_Mono'] text-[10px] tracking-widest uppercase text-[#1a1a1a]/50 block mb-1">
                       Commitment
                     </span>
-                    <span className="font-['Tektur'] text-sm uppercase font-semibold">
-                      None. Pause anytime
+                    <span className="font-['Tektur'] text-sm uppercase font-bold text-[#111]">
+                      Pause or Cancel Anytime
                     </span>
                   </div>
                 </div>
 
                 {/* Description */}
-                <p className="font-['Tektur'] text-xs uppercase tracking-wide leading-relaxed text-[#1a1a1a]/70">
-                  SUBSCRIBE, SEND REQUESTS, GET WORK BACK. PAUSE WHEN THE QUEUE
-                  IS EMPTY. CANCEL WHEN YOU ARE DONE.
+                <p className="font-['Figtree'] text-xs uppercase tracking-wide leading-relaxed text-[#1a1a1a]/70">
+                  SUBSCRIBE, SUBMIT TASKS, SHIP PRODUCTION CODE. PAUSE WHEN THE QUEUE IS SATISFIED.
                 </p>
               </motion.div>
             </div>
@@ -141,68 +184,87 @@ export default function PricingSection() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
               {/* Standard card */}
               <motion.div
-                className="bg-white rounded-2xl p-8 md:p-10 border border-[#1a1a1a]/10 flex flex-col justify-between"
+                className="bg-white p-8 md:p-10 border border-[#1a1a1a]/10 flex flex-col justify-between shadow-sm"
                 variants={fadeUp}
                 initial="hidden"
                 animate={isInView ? "visible" : "hidden"}
                 custom={4}
               >
                 <div>
-                  <span className="font-['Tektur'] text-xs uppercase tracking-widest font-bold text-[#1a1a1a]/50 block mb-6">
-                    STANDARD
-                  </span>
-                  <div className="mb-6">
-                    <span className="font-['Tektur'] text-4xl md:text-5xl font-bold text-[#1a1a1a]">
-                      $4,995
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-['Tektur'] text-xs uppercase tracking-widest font-bold text-[#1a1a1a]/50">
+                      STANDARD SPRINT
                     </span>
-                    <span className="font-['Fragment_Mono'] text-sm text-[#1a1a1a]/50 ml-1">
+                    <span className="font-['Fragment_Mono'] text-[10px] uppercase text-[#777] border border-[#e2e1dc] px-2 py-0.5">
+                      1 QUEUE
+                    </span>
+                  </div>
+                  <div className="mb-4">
+                    <span className="font-['Tektur'] text-4xl md:text-5xl font-bold text-[#1a1a1a]">
+                      {standardPrice}
+                    </span>
+                    <span className="font-['Fragment_Mono'] text-xs text-[#1a1a1a]/50 ml-1">
                       /MONTH
                     </span>
                   </div>
-                  <p className="font-['Figtree'] text-sm text-[#1a1a1a]/60 leading-relaxed">
-                    One designer, one queue. Every request handled in turn.
+                  <p className="font-['Figtree'] text-sm text-[#1a1a1a]/70 leading-relaxed">
+                    One dedicated senior engineer. One active request at a time. Ideal for evolving SaaS products and startups.
                   </p>
                 </div>
-                <button className="mt-8 w-full py-3 px-6 bg-[#1a1a1a] text-white font-['Tektur'] text-xs uppercase tracking-widest rounded-lg hover:bg-[#333] transition-colors duration-300">
-                  Get Started
-                </button>
+                <a
+                  href="#contact"
+                  className="mt-8 block text-center py-3.5 px-6 bg-[#1a1a1a] text-white font-['Tektur'] text-xs uppercase tracking-widest hover:bg-[#333] transition-colors"
+                >
+                  &gt; BOOK STANDARD
+                </a>
               </motion.div>
 
               {/* Pro card */}
               <motion.div
-                className="bg-[#1a1a1a] rounded-2xl p-8 md:p-10 border-2 border-[#52ff9d] flex flex-col justify-between relative overflow-hidden"
+                className="bg-[#121212] p-8 md:p-10 border-2 flex flex-col justify-between relative overflow-hidden"
+                style={{ borderColor: 'var(--color-accent)' }}
                 variants={fadeUp}
                 initial="hidden"
                 animate={isInView ? "visible" : "hidden"}
                 custom={5}
               >
-                {/* Subtle gradient glow */}
-                <div className="absolute top-0 right-0 w-40 h-40 bg-[#52ff9d]/10 rounded-full blur-3xl pointer-events-none" />
-
                 <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <span className="font-['Tektur'] text-xs uppercase tracking-widest font-bold text-white/50">
-                      PRO
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-['Tektur'] text-xs uppercase tracking-widest font-bold text-white/60">
+                      PRO ACCELERATION
                     </span>
-                    <span className="bg-[#52ff9d] text-[#1a1a1a] font-['Fragment_Mono'] text-[10px] uppercase tracking-wider px-3 py-1 rounded-full font-semibold">
-                      MOST BOOKED
+                    <span
+                      className="text-[#0e0e0e] font-['Fragment_Mono'] text-[10px] uppercase tracking-wider px-2.5 py-0.5 font-bold"
+                      style={{ backgroundColor: 'var(--color-accent)' }}
+                    >
+                      MOST POPULAR
                     </span>
                   </div>
-                  <div className="mb-6">
-                    <span className="font-['Tektur'] text-4xl md:text-5xl font-bold text-[#52ff9d]">
-                      $7,995
+                  <div className="mb-4">
+                    <span
+                      className="font-['Tektur'] text-4xl md:text-5xl font-bold"
+                      style={{ color: 'var(--color-accent)' }}
+                    >
+                      {proPrice}
                     </span>
-                    <span className="font-['Fragment_Mono'] text-sm text-white/50 ml-1">
+                    <span className="font-['Fragment_Mono'] text-xs text-white/50 ml-1">
                       /MONTH
                     </span>
                   </div>
-                  <p className="font-['Figtree'] text-sm text-white/60 leading-relaxed">
-                    Two slots in parallel, same team, twice the throughput.
+                  <p className="font-['Figtree'] text-sm text-white/70 leading-relaxed">
+                    Two parallel tracks, double the velocity. Complete architecture, 3D/WebGL experiences, and real-time support.
                   </p>
                 </div>
-                <button className="relative z-10 mt-8 w-full py-3 px-6 bg-[#52ff9d] text-[#1a1a1a] font-['Tektur'] text-xs uppercase tracking-widest rounded-lg font-bold hover:bg-[#3de085] transition-colors duration-300">
-                  Get Started
-                </button>
+                <a
+                  href="#contact"
+                  className="relative z-10 mt-8 block text-center py-3.5 px-6 font-['Tektur'] text-xs uppercase tracking-widest font-bold transition-colors"
+                  style={{
+                    backgroundColor: 'var(--color-accent)',
+                    color: '#0e0e0e',
+                  }}
+                >
+                  &gt; BOOK PRO SPRINT
+                </a>
               </motion.div>
             </div>
 
@@ -216,16 +278,14 @@ export default function PricingSection() {
             >
               {/* Table header */}
               <div className="grid grid-cols-12 py-4 border-b border-[#1a1a1a]/10">
-                <div className="col-span-6" />
-                <div className="col-span-3 text-center">
-                  <span className="font-['Fragment_Mono'] text-[10px] uppercase tracking-widest text-[#1a1a1a]/40">
-                    Standard
-                  </span>
+                <div className="col-span-6 font-['Fragment_Mono'] text-[10px] uppercase tracking-widest text-[#1a1a1a]/50">
+                  DELIVERABLE SPECIFICATION
                 </div>
-                <div className="col-span-3 text-center">
-                  <span className="font-['Fragment_Mono'] text-[10px] uppercase tracking-widest text-[#1a1a1a]/40">
-                    Pro
-                  </span>
+                <div className="col-span-3 text-center font-['Fragment_Mono'] text-[10px] uppercase tracking-widest text-[#1a1a1a]/50">
+                  STANDARD
+                </div>
+                <div className="col-span-3 text-center font-['Fragment_Mono'] text-[10px] uppercase tracking-widest font-bold text-black">
+                  PRO
                 </div>
               </div>
 
@@ -233,48 +293,16 @@ export default function PricingSection() {
               {features.map((feature, idx) => (
                 <div
                   key={idx}
-                  className="grid grid-cols-12 py-5 border-b border-[#1a1a1a]/10 items-center"
+                  className="grid grid-cols-12 py-4 border-b border-[#1a1a1a]/10 items-center font-['Fragment_Mono'] text-xs"
                 >
-                  <div className="col-span-6">
-                    <span className="font-['Figtree'] text-sm text-[#1a1a1a]/70">
-                      {feature.label}
-                    </span>
+                  <div className="col-span-6 font-['Figtree'] text-sm text-[#1a1a1a]/80 font-medium">
+                    {feature.label}
                   </div>
-                  <div className="col-span-3 text-center flex items-center justify-center gap-2">
-                    <svg
-                      className="w-4 h-4 text-[#1a1a1a]/40"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    <span className="font-['Fragment_Mono'] text-xs text-[#1a1a1a]/60">
-                      {feature.standard}
-                    </span>
+                  <div className="col-span-3 text-center text-[#1a1a1a]/60">
+                    {feature.standard}
                   </div>
-                  <div className="col-span-3 text-center flex items-center justify-center gap-2">
-                    <svg
-                      className="w-4 h-4 text-[#52ff9d]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    <span className="font-['Fragment_Mono'] text-xs text-[#1a1a1a]/80 font-semibold">
-                      {feature.pro}
-                    </span>
+                  <div className="col-span-3 text-center font-bold text-black">
+                    {feature.pro}
                   </div>
                 </div>
               ))}

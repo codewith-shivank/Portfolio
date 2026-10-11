@@ -32,6 +32,17 @@ export interface Principles {
   details: string;
 }
 
+export interface Article {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  readTime: string;
+  category: string;
+  content: string;
+}
+
 export interface ContactFormData {
   name: string;
   email: string;
