@@ -17,6 +17,9 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 3000,
+    strictPort: true,
+    // The hosted preview is served from a proxied domain, so any host is allowed.
+    allowedHosts: true,
   },
   build: {
     chunkSizeWarningLimit: 1600,
