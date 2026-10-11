@@ -311,6 +311,21 @@
     transform: scale(1.035);
   }
 
+  /* Fallback shown when a remote asset cannot be loaded */
+  .media-fallback {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    color: var(--color-dim);
+    background-color: var(--color-surface-2);
+    background-image:
+      linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
   /* ═══ INTERACTIVE ROWS ═══ */
   .row-invert {
     transition:

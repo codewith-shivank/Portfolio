@@ -5,6 +5,7 @@ import Marquee, { MarqueeToggle } from './ui/Marquee';
 import { useReducedMotionFlag } from './ui/useReducedMotionFlag';
 import MonoLink from './ui/MonoLink';
 import MonoArrow from './ui/MonoArrow';
+import SmartImage from './ui/SmartImage';
 import { NOTES, NOTES_INTRO } from '../data/monodrift';
 import type { Note } from '../types';
 
@@ -19,7 +20,7 @@ function NoteCard({ note, onOpen }: { note: Note; onOpen: (note: Note) => void }
       className="group mx-3 w-[15rem] shrink-0 cursor-pointer text-left sm:w-[19rem]"
     >
       <span className="frame block aspect-[4/5] w-full">
-        <img src={note.image} alt={note.title} loading="lazy" />
+        <SmartImage src={note.image} alt={note.title} />
         <span className="kicker absolute bottom-3 left-3 bg-accent px-2.5 py-1.5 text-accent-ink opacity-0 transition-opacity duration-500 group-hover:opacity-100">
           PREVIEW
         </span>
@@ -127,7 +128,7 @@ export default function NotesSection() {
 
               <div className="mt-6 grid gap-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:items-center">
                 <div className="frame aspect-[4/5] w-full">
-                  <img src={active.image} alt={active.title} />
+                  <SmartImage src={active.image} alt={active.title} />
                 </div>
                 <div>
                   <h3 className="display display-md">{active.title}</h3>

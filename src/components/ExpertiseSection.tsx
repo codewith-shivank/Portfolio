@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import SectionIntro from './ui/SectionIntro';
 import MonoLink from './ui/MonoLink';
+import SmartImage from './ui/SmartImage';
 import { EXPERTISE, EXPERTISE_INTRO } from '../data/monodrift';
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -96,7 +97,7 @@ export default function ExpertiseSection() {
 
                         <div>
                           <div className="frame aspect-[4/3] w-full">
-                            <img src={item.image} alt={item.imageAlt} loading="lazy" />
+                            <SmartImage src={item.image} alt={item.imageAlt} />
                           </div>
                           <MonoLink href="#work" variant="outline" className="mt-6">
                             VIEW PROJECTS

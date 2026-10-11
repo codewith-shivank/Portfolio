@@ -3,6 +3,7 @@ import Marquee, { MarqueeToggle } from './ui/Marquee';
 import { useReducedMotionFlag } from './ui/useReducedMotionFlag';
 import BracketLabel from './ui/BracketLabel';
 import MonoArrow from './ui/MonoArrow';
+import SmartImage from './ui/SmartImage';
 import { TESTIMONIALS, TESTIMONIALS_INTRO } from '../data/monodrift';
 import type { Testimonial } from '../types';
 
@@ -11,7 +12,7 @@ function TestimonialCard({ item }: { item: Testimonial }) {
     <figure className="mx-3 flex w-[19rem] shrink-0 flex-col justify-between gap-6 border border-line bg-surface p-6 sm:w-[24rem]">
       {item.image ? (
         <div className="frame group h-16 w-16 overflow-hidden rounded-full border border-line">
-          <img src={item.image} alt={item.name} loading="lazy" className="h-full w-full object-cover" />
+          <SmartImage src={item.image} alt={item.name} className="h-full w-full object-cover" />
         </div>
       ) : (
         <span className="flex h-16 w-16 items-center justify-center rounded-full border border-line font-heading text-sm font-bold text-muted">

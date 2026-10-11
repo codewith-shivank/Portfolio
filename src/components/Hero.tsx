@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import MonoLink from './ui/MonoLink';
+import SmartImage from './ui/SmartImage';
 import MonoArrow from './ui/MonoArrow';
 import SplitLetters from './ui/SplitLetters';
 import { HERO, SITE } from '../data/monodrift';
@@ -8,8 +8,6 @@ import { HERO, SITE } from '../data/monodrift';
 const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function Hero() {
-  const [imageReady, setImageReady] = useState(false);
-
   return (
     <section id="top" className="section-ink relative overflow-hidden pt-16">
       <div className="hairline-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden="true" />
@@ -97,13 +95,7 @@ export default function Hero() {
       {/* Full-bleed hero frame */}
       <div className="relative mt-12 border-y border-line-soft">
         <div className="frame group relative aspect-[16/10] max-h-[78svh] w-full sm:aspect-[16/8]">
-          <img
-            src={HERO.image}
-            alt={HERO.imageAlt}
-            loading="eager"
-            onLoad={() => setImageReady(true)}
-            className={`transition-opacity duration-1000 ${imageReady ? 'opacity-100' : 'opacity-0'}`}
-          />
+          <SmartImage src={HERO.image} alt={HERO.imageAlt} eager />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-ink/25" />
 
           <span className="kicker absolute left-5 top-5 border border-white/25 bg-ink-deep/70 px-3 py-2 text-white backdrop-blur-sm sm:left-8 sm:top-8">

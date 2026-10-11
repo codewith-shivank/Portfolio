@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import MonoArrow from './ui/MonoArrow';
 import SplitLetters from './ui/SplitLetters';
+import SmartImage from './ui/SmartImage';
 import { SHOWREEL } from '../data/monodrift';
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -60,7 +61,7 @@ export default function ShowreelSection() {
           aria-label={`${SHOWREEL.meta}. Open the showreel player.`}
           className="frame group relative block aspect-[16/11] w-full cursor-pointer sm:aspect-[16/7]"
         >
-          <img src={SHOWREEL.poster} alt={SHOWREEL.posterAlt} loading="lazy" />
+          <SmartImage src={SHOWREEL.poster} alt={SHOWREEL.posterAlt} />
           <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/25 to-ink/40" />
 
           <span className="kicker absolute left-5 top-5 flex items-center gap-3 text-white sm:left-10 sm:top-10">
@@ -123,7 +124,7 @@ export default function ShowreelSection() {
               </motion.h2>
 
               <div className="frame relative aspect-video w-full border border-line">
-                <img src={SHOWREEL.poster} alt={SHOWREEL.posterAlt} />
+                <SmartImage src={SHOWREEL.poster} alt={SHOWREEL.posterAlt} />
                 <span className="pointer-events-none absolute inset-0 bg-ink/55" />
 
                 <span

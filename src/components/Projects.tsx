@@ -1,16 +1,14 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import SectionIntro from './ui/SectionIntro';
 import MonoArrow from './ui/MonoArrow';
 import MonoLink from './ui/MonoLink';
+import SmartImage from './ui/SmartImage';
 import { PROJECTS, WORK_INTRO } from '../data/monodrift';
 import type { Project } from '../types';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 function ProjectCard({ project, order }: { project: Project; order: number }) {
-  const [ready, setReady] = useState(false);
-
   return (
     <motion.article
       initial={{ opacity: 0, y: 40 }}
@@ -20,13 +18,7 @@ function ProjectCard({ project, order }: { project: Project; order: number }) {
       className={`group flex flex-col ${order % 2 === 1 ? 'lg:mt-24' : ''}`}
     >
       <a href={project.href} className="frame relative block aspect-[4/3] w-full">
-        <img
-          src={project.image}
-          alt={project.imageAlt}
-          loading="lazy"
-          onLoad={() => setReady(true)}
-          className={`transition-opacity duration-700 ${ready ? 'opacity-100' : 'opacity-0'}`}
-        />
+        <SmartImage src={project.image} alt={project.imageAlt} />
 
         <span className="kicker absolute left-4 top-4 bg-ink-deep/75 px-2.5 py-1.5 text-white backdrop-blur-sm">
           {String(project.index).padStart(2, '0')}

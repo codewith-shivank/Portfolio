@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import SectionIntro from './ui/SectionIntro';
 import MonoLink from './ui/MonoLink';
+import SmartImage from './ui/SmartImage';
 import { PROCESS_CONTACT, PROCESS_INTRO, PROCESS_STEPS, PROCESS_TABS } from '../data/monodrift';
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -107,7 +108,7 @@ export default function ProcessSection() {
         {/* Contact person */}
         <div className="grid gap-8 border border-line p-6 sm:p-8 lg:grid-cols-[minmax(0,240px)_minmax(0,1fr)] lg:gap-14">
           <div className="frame group aspect-[3/4] overflow-hidden">
-            <img src={PROCESS_CONTACT.image} alt={PROCESS_CONTACT.imageAlt} loading="lazy" />
+            <SmartImage src={PROCESS_CONTACT.image} alt={PROCESS_CONTACT.imageAlt} />
           </div>
 
           <div className="flex flex-col justify-between gap-8">

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import SectionIntro from './ui/SectionIntro';
 import RollingNumber from './ui/RollingNumber';
 import MonoArrow from './ui/MonoArrow';
+import SmartImage from './ui/SmartImage';
 import { AWARDS, RESULTS_CTA, RESULTS_INTRO, STATS } from '../data/monodrift';
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -85,7 +86,7 @@ export default function ResultsSection() {
 
           <div className="flex items-end gap-6">
             <div className="frame group w-24 shrink-0 sm:w-32">
-              <img src={AWARDS.image} alt={AWARDS.imageAlt} loading="lazy" className="aspect-[2/3]" />
+              <SmartImage src={AWARDS.image} alt={AWARDS.imageAlt} className="aspect-[2/3]" />
             </div>
             <p className="max-w-[24ch] text-sm leading-relaxed text-muted">{AWARDS.note}</p>
           </div>

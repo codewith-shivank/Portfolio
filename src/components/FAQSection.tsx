@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import SectionIntro from './ui/SectionIntro';
 import MonoLink from './ui/MonoLink';
+import SmartImage from './ui/SmartImage';
 import { FAQ_INTRO, FAQ_ITEMS } from '../data/monodrift';
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -26,7 +27,7 @@ export default function FAQSection() {
         {/* Who answers */}
         <div className="flex flex-col gap-6 border border-line p-5 lg:sticky lg:top-24 lg:self-start">
           <div className="frame group aspect-[4/5] w-full">
-            <img src={FAQ_INTRO.person.image} alt={FAQ_INTRO.person.imageAlt} loading="lazy" />
+            <SmartImage src={FAQ_INTRO.person.image} alt={FAQ_INTRO.person.imageAlt} />
           </div>
           <div>
             <p className="font-heading text-lg font-bold tracking-[-0.02em]">
