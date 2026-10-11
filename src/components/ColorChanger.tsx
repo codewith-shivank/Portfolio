@@ -1,160 +1,197 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { COLOR_PALETTES } from '../data/portfolioData';
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ACCENT_PRESETS, DEFAULT_ACCENT } from '../data/monodrift';
 
-function getInitialColor(): string {
-  try {
-    const saved = localStorage.getItem('monodrift_accent_color');
-    if (saved) return saved;
-  } catch {
-    // ignore
+const STORAGE_KEY = 'monodrift.accent';
+
+/** Accepts #rgb, #rrggbb and rgb()/rgba() and normalises to lowercase hex. */
+function parseColor(input: string): string | null {
+  const value = input.trim().toLowerCase();
+
+  if (/^#[0-9a-f]{3}$/.test(value)) {
+    return `#${value[1]}${value[1]}${value[2]}${value[2]}${value[3]}${value[3]}`;
   }
-  return '#52ff9d';
+
+  if (/^#[0-9a-f]{6}$/.test(value)) {
+    return value;
+  }
+
+  const rgb = value.match(/^rgba?\(\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})/);
+  if (rgb) {
+    const channels = rgb.slice(1, 4).map((part) => Math.min(255, Number(part)));
+    return `#${channels.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`;
+  }
+
+  return null;
+}
+
+/** Darker companion used for hover states. */
+function shade(hex: string, amount: number): string {
+  const int = Number.parseInt(hex.slice(1), 16);
+  const factor = 1 - amount;
+  const channels = [(int >> 16) & 255, (int >> 8) & 255, int & 255].map((channel) =>
+    Math.max(0, Math.min(255, Math.round(channel * factor))),
+  );
+  return `#${channels.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`;
+}
+
+/** Pick ink or paper text for whatever sits on top of the accent. */
+function inkFor(hex: string): string {
+  const int = Number.parseInt(hex.slice(1), 16);
+  const [r, g, b] = [(int >> 16) & 255, (int >> 8) & 255, int & 255];
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 140 ? '#0b0b0b' : '#ffffff';
 }
 
 export default function ColorChanger() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [currentColor, setCurrentColor] = useState<string>(getInitialColor);
-  const [customHex, setCustomHex] = useState<string>(currentColor);
+  const [open, setOpen] = useState(false);
+  const [accent, setAccent] = useState(() => {
+    if (typeof window === 'undefined') return DEFAULT_ACCENT;
+    try {
+      return localStorage.getItem(STORAGE_KEY) ?? DEFAULT_ACCENT;
+    } catch {
+      return DEFAULT_ACCENT;
+    }
+  });
+  const [draft, setDraft] = useState(accent);
+  const [invalid, setInvalid] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
 
+  // Paint the accent onto the document so every token-driven class follows.
   useEffect(() => {
-    // Ensure CSS property matches initial state
-    document.documentElement.style.setProperty('--color-accent', currentColor);
-    document.documentElement.style.setProperty('--color-accent-dark', currentColor);
-  }, [currentColor]);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
-
-  const applyColor = (hex: string) => {
-    document.documentElement.style.setProperty('--color-accent', hex);
-    document.documentElement.style.setProperty('--color-accent-dark', hex);
+    const root = document.documentElement;
+    root.style.setProperty('--color-accent', accent);
+    root.style.setProperty('--color-accent-dark', shade(accent, 0.18));
+    root.style.setProperty('--color-accent-ink', inkFor(accent));
     try {
-      localStorage.setItem('monodrift_accent_color', hex);
+      localStorage.setItem(STORAGE_KEY, accent);
     } catch {
-      // ignore
+      // storage unavailable — the accent simply will not persist
     }
-    setCurrentColor(hex);
-    setCustomHex(hex);
+  }, [accent]);
+
+  useEffect(() => {
+    const onPointerDown = (event: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+
+    if (open) {
+      document.addEventListener('mousedown', onPointerDown);
+      document.addEventListener('keydown', onKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open]);
+
+  const apply = (hex: string) => {
+    setAccent(hex);
+    setDraft(hex);
+    setInvalid(false);
   };
 
-  const handleCustomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const hex = e.target.value;
-    setCustomHex(hex);
-    if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
-      applyColor(hex);
+  const handleDraft = (value: string) => {
+    setDraft(value);
+    const parsed = parseColor(value);
+    if (parsed) {
+      apply(parsed);
+    } else if (value.trim().length > 3) {
+      setInvalid(true);
     }
-  };
-
-  const resetDefault = () => {
-    applyColor('#52ff9d');
   };
 
   return (
     <div className="relative" ref={popoverRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-5 h-5 rounded-full transition-all duration-200 hover:scale-115 active:scale-95 cursor-pointer focus:outline-none"
-        style={{
-          backgroundColor: currentColor,
-          boxShadow: `0 0 14px ${currentColor}90`,
-        }}
-        title="Change brand accent color (Monodrift signature feature)"
-        aria-label="Toggle brand color picker"
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+        aria-label="Open the accent colour changer"
+        className="h-5 w-5 cursor-pointer rounded-full ring-1 ring-white/25 transition-transform duration-300 hover:scale-110"
+        style={{ backgroundColor: accent, boxShadow: `0 0 14px ${accent}80` }}
       />
 
       <AnimatePresence>
-        {isOpen && (
+        {open && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            initial={{ opacity: 0, y: 10, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.96 }}
-            transition={{ duration: 0.2 }}
-            className="absolute right-0 top-full mt-2 w-72 bg-[#121212] border border-[#2a2a2a] p-4 shadow-2xl z-50 text-left"
+            exit={{ opacity: 0, y: 8, scale: 0.97 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute right-0 top-full z-[60] mt-3 w-[19rem] border border-line bg-ink-deep p-5 text-left shadow-2xl"
           >
-            <div className="flex items-center justify-between pb-3 border-b border-[#222]">
+            <div className="flex items-start justify-between gap-4 border-b border-line-soft pb-4">
               <div>
-                <span className="font-['Tektur'] text-xs font-bold uppercase tracking-wider text-white">
+                <p className="font-heading text-sm font-bold uppercase tracking-[-0.01em]">
                   COLOR CHANGER
-                </span>
-                <p className="font-['Fragment_Mono'] text-[9px] text-[#6d6d6d] uppercase">
-                  MONODRIFT SIGNATURE ENGINE
                 </p>
+                <span className="kicker mt-1 block text-dim">LIVE THEME ENGINE</span>
               </div>
               <button
-                onClick={resetDefault}
-                className="font-['Fragment_Mono'] text-[9px] uppercase text-[#8a8a8a] hover:text-white"
+                type="button"
+                onClick={() => apply(DEFAULT_ACCENT)}
+                className="kicker cursor-pointer text-muted transition-colors hover:text-accent"
               >
                 RESET
               </button>
             </div>
 
-            <div className="my-3">
-              <span className="font-['Fragment_Mono'] text-[10px] uppercase text-[#8a8a8a] block mb-2">
-                PRESET PALETTES
-              </span>
-              <div className="grid grid-cols-4 gap-2">
-                {COLOR_PALETTES.map((palette) => (
+            <div className="mt-4">
+              <span className="kicker text-dim">PRESETS</span>
+              <div className="mt-3 grid grid-cols-4 gap-2">
+                {ACCENT_PRESETS.map((preset) => (
                   <button
-                    key={palette.name}
-                    onClick={() => applyColor(palette.hex)}
-                    className="flex flex-col items-center gap-1 p-1.5 border transition-all rounded"
+                    key={preset.hex}
+                    type="button"
+                    onClick={() => apply(preset.hex)}
+                    aria-label={preset.name}
+                    aria-pressed={accent === preset.hex}
+                    title={preset.name}
+                    className="flex aspect-square cursor-pointer items-center justify-center border transition-colors"
                     style={{
-                      borderColor: currentColor === palette.hex ? palette.hex : '#262626',
-                      backgroundColor: currentColor === palette.hex ? '#1a1a1a' : '#141414',
+                      borderColor: accent === preset.hex ? preset.hex : '#262626',
                     }}
-                    title={palette.name}
                   >
                     <span
-                      className="w-4 h-4 rounded-full"
-                      style={{
-                        backgroundColor: palette.hex,
-                        boxShadow: currentColor === palette.hex ? `0 0 8px ${palette.hex}` : 'none',
-                      }}
+                      className="h-4 w-4 rounded-full"
+                      style={{ backgroundColor: preset.hex }}
                     />
-                    <span className="text-[8px] font-['Fragment_Mono'] text-[#777] truncate w-full text-center">
-                      {palette.name.split(' ')[0]}
-                    </span>
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="pt-3 border-t border-[#222]">
-              <span className="font-['Fragment_Mono'] text-[10px] uppercase text-[#8a8a8a] block mb-2">
-                CUSTOM ACCENT HEX
-              </span>
-              <div className="flex items-center gap-2">
+            <div className="mt-5 border-t border-line-soft pt-4">
+              <span className="kicker text-dim">HEX OR RGB</span>
+              <div className="mt-3 flex items-center gap-2">
                 <input
                   type="color"
-                  value={customHex}
-                  onChange={(e) => applyColor(e.target.value)}
-                  className="w-8 h-8 rounded border border-[#333] cursor-pointer bg-transparent p-0"
+                  value={accent}
+                  onChange={(event) => apply(event.target.value)}
+                  aria-label="Pick an accent colour"
+                  className="h-9 w-9 cursor-pointer border border-line bg-transparent p-0"
                 />
                 <input
                   type="text"
-                  value={customHex}
-                  onChange={handleCustomChange}
-                  placeholder="#52ff9d"
-                  className="flex-1 bg-[#1a1a1a] border border-[#2a2a2a] px-2.5 py-1 font-['Fragment_Mono'] text-xs text-white uppercase focus:outline-none focus:border-white"
+                  value={draft}
+                  onChange={(event) => handleDraft(event.target.value)}
+                  placeholder="#52ff9d or rgb(82, 255, 157)"
+                  aria-label="Accent colour value"
+                  className={`w-full border bg-surface px-3 py-2 font-mono text-xs uppercase text-white placeholder:text-dim focus:outline-none ${
+                    invalid ? 'border-red-400' : 'border-line focus:border-accent'
+                  }`}
                 />
               </div>
-            </div>
-
-            <div className="mt-3 text-[9px] font-['Fragment_Mono'] text-[#555] uppercase leading-tight">
-              Updates all highlights, charts, buttons &amp; telemetry in real-time.
+              <span className={`kicker mt-2 block ${invalid ? 'text-red-400' : 'text-dim'}`}>
+                {invalid ? 'ENTER A HEX OR RGB VALUE' : `ACTIVE: ${accent.toUpperCase()}`}
+              </span>
             </div>
           </motion.div>
         )}

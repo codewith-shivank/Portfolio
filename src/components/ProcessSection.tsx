@@ -1,91 +1,135 @@
-import { motion } from 'framer-motion';
-import { DEVELOPMENT_PRINCIPLES } from '../data/portfolioData';
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import SectionIntro from './ui/SectionIntro';
+import MonoLink from './ui/MonoLink';
+import SmartImage from './ui/SmartImage';
+import { PROCESS_CONTACT, PROCESS_INTRO, PROCESS_STEPS, PROCESS_TABS } from '../data/monodrift';
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function ProcessSection() {
+  const [activeId, setActiveId] = useState(PROCESS_TABS[0].id);
+  const activeTab = PROCESS_TABS.find((tab) => tab.id === activeId) ?? PROCESS_TABS[0];
+
   return (
-    <section id="process" className="section-light py-24 sm:py-32 bg-[#f7f6f3] text-[#0e0e0e] border-b border-[#d9d8d3]">
-      <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
-          {/* Left Column Bracket Label */}
+    <section id="process" className="section-ink border-t border-line-soft pt-16 sm:pt-24">
+      <SectionIntro
+        index={PROCESS_INTRO.index}
+        eyebrow={PROCESS_INTRO.eyebrow}
+        heading={
+          <>
+            THE IDEA THAT WINS IS <span className="hl">THE ONE THAT SHIPS.</span>
+          </>
+        }
+        intro={PROCESS_INTRO.intro}
+        meta={PROCESS_INTRO.meta}
+      />
+
+      <div className="shell flex flex-col gap-12 pb-20 sm:pb-28">
+        {/* Deliverable toggle */}
+        <div className="flex flex-col gap-5 border-t border-line pt-6 lg:flex-row lg:items-center lg:justify-between">
+          <span className="kicker text-muted">{PROCESS_CONTACT.tabQuestion}</span>
+          <div className="flex flex-wrap gap-2">
+            {PROCESS_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveId(tab.id)}
+                aria-pressed={tab.id === activeId}
+                data-active={tab.id === activeId}
+                className="toggle-chip cursor-pointer"
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Timeline */}
+        <div className="grid gap-8 lg:grid-cols-[150px_minmax(0,1fr)]">
           <div>
-            <div className="sticky top-28">
-              <span className="font-['Fragment_Mono'] text-xs uppercase tracking-widest text-[#6d6d6d] block mb-2">
-                [ 04 / APPROACH ]
-              </span>
-              <div
-                className="h-[2px] w-16 mb-4"
-                style={{ backgroundColor: 'var(--color-accent)' }}
-              />
-              <div className="font-['Fragment_Mono'] text-[11px] text-[#888] space-y-1">
-                <div>METHODOLOGY: RIGOROUS</div>
-                <div>CYCLE: 4 STAGES</div>
-                <div>BUDGET: &lt;50MS TTI</div>
-              </div>
-            </div>
+            <span className="kicker text-dim">{PROCESS_CONTACT.weekLabel}</span>
           </div>
 
-          {/* Right Column Content */}
-          <div>
-            <p className="mb-4 font-['Fragment_Mono'] text-[10px] uppercase tracking-wider text-[#8a8a8a]">
-              [ HOW THE WORK TAKES SHAPE ]
-            </p>
-            <h2 className="mb-12 font-['Tektur'] text-3xl sm:text-5xl lg:text-6xl font-bold uppercase leading-[0.92] text-[#0e0e0e]">
-              HOW HIGH-IMPACT
-              <br />
-              <span
-                className="px-2 text-[#0e0e0e] inline-block"
-                style={{ backgroundColor: 'var(--color-accent)' }}
+          <ol className="relative border-l border-line">
+            {PROCESS_STEPS.map((step, index) => (
+              <motion.li
+                key={step.number}
+                initial={{ opacity: 0, x: -14 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
+                transition={{ duration: 0.6, delay: index * 0.05, ease }}
+                className={`relative pl-7 sm:pl-10 ${index === PROCESS_STEPS.length - 1 ? '' : 'pb-10'}`}
               >
-                SYSTEMS TAKE SHAPE.
-              </span>
-            </h2>
+                <span
+                  aria-hidden="true"
+                  className="absolute -left-[6px] top-1.5 h-3 w-3 rounded-full border border-ink bg-accent"
+                />
+                <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
+                  <span className="kicker text-dim">{step.number}</span>
+                  <h3 className="display display-sm">{step.title}</h3>
+                  <span className="mono-label ml-auto hidden text-muted sm:inline">{step.meta}</span>
+                </div>
+                <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">{step.body}</p>
+                <span className="mono-label mt-2 block text-dim sm:hidden">{step.meta}</span>
+              </motion.li>
+            ))}
+          </ol>
+        </div>
 
-            {/* Step Grid */}
-            <div className="grid grid-cols-1 border-t border-[#d9d8d3] sm:grid-cols-2">
-              {DEVELOPMENT_PRINCIPLES.map((step, index) => (
-                <motion.div
-                  key={step.number}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: index * 0.08 }}
-                  className="border-b border-[#d9d8d3] py-8 sm:pr-8 lg:pr-12 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <span
-                        className="font-['Fragment_Mono'] text-sm font-bold px-2 py-0.5"
-                        style={{
-                          backgroundColor: 'var(--color-accent)',
-                          color: '#0e0e0e',
-                        }}
-                      >
-                        PHASE {step.number}
-                      </span>
-                      <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a]">
-                        STAGE 0{index + 1} / 04
-                      </span>
-                    </div>
-
-                    <h3 className="font-['Tektur'] text-xl sm:text-2xl font-bold uppercase text-[#0e0e0e] mb-2">
-                      {step.title}
-                    </h3>
-
-                    <p className="font-['Figtree'] text-xs sm:text-sm font-semibold text-[#111] mb-3">
-                      {step.summary}
-                    </p>
-
-                    <p className="font-['Figtree'] text-sm text-[#555] leading-relaxed">
-                      {step.details}
-                    </p>
-                  </div>
-
-                  <div className="mt-8 pt-4 border-t border-[#e2e1dc] flex items-center justify-between font-['Fragment_Mono'] text-[10px] text-[#777] uppercase">
-                    <span>DELIVERABLE: VERIFIED CODE</span>
-                    <span>100% AUDIT</span>
-                  </div>
-                </motion.div>
+        {/* Outcome of the selected deliverable */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab.id}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.35, ease }}
+            className="grid gap-6 border-t border-line pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+          >
+            <div>
+              <p className="display display-md">
+                <span className="hl">{activeTab.headline}</span>
+              </p>
+              <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted">
+                {activeTab.outcome}
+              </p>
+            </div>
+            <div className="flex flex-wrap content-start gap-3 lg:justify-end">
+              {activeTab.closing.map((note) => (
+                <span key={note} className="kicker border border-line px-3 py-2 text-muted">
+                  [ {note} ]
+                </span>
               ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Contact person */}
+        <div className="grid gap-8 border border-line p-6 sm:p-8 lg:grid-cols-[minmax(0,240px)_minmax(0,1fr)] lg:gap-14">
+          <div className="frame group aspect-[3/4] overflow-hidden">
+            <SmartImage src={PROCESS_CONTACT.image} alt={PROCESS_CONTACT.imageAlt} />
+          </div>
+
+          <div className="flex flex-col justify-between gap-8">
+            <div>
+              <span className="kicker text-muted">{PROCESS_CONTACT.kicker}</span>
+              <p className="display display-md mt-4 max-w-[18ch]">{PROCESS_CONTACT.headline}</p>
+            </div>
+
+            <div className="flex flex-col gap-6">
+              <div className="flex items-end justify-between gap-6 border-t border-line pt-5">
+                <div>
+                  <p className="font-heading text-xl font-bold tracking-[-0.02em]">
+                    {PROCESS_CONTACT.name}
+                  </p>
+                  <span className="mono-label mt-1 block text-muted">{PROCESS_CONTACT.role}</span>
+                </div>
+                <MonoLink href="#contact" variant="solid">
+                  {PROCESS_CONTACT.cta}
+                </MonoLink>
+              </div>
+              <span className="mono-label text-dim">{PROCESS_CONTACT.note}</span>
             </div>
           </div>
         </div>

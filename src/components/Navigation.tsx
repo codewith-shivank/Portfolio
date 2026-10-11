@@ -1,187 +1,188 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useCallback, useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import ColorChanger from './ColorChanger';
-import { PERSONAL_DETAILS } from '../data/portfolioData';
+import MonoArrow from './ui/MonoArrow';
+import { NAV_LINKS, SITE, SOCIAL_LINKS } from '../data/monodrift';
 
-const NAV_ITEMS = [
-  { label: 'Work', href: '#projects', num: '01' },
-  { label: 'Profile', href: '#about', num: '02' },
-  { label: 'Capabilities', href: '#skills', num: '03' },
-  { label: 'Approach', href: '#process', num: '04' },
-  { label: 'Results', href: '#results', num: '05' },
-  { label: 'Words', href: '#testimonials', num: '06' },
-  { label: 'Notes', href: '#notes', num: '07' },
-  { label: 'Pricing', href: '#pricing', num: '08' },
-  { label: 'Contact', href: '#contact', num: '09' },
-];
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function Navigation() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight > 0) {
-        setScrollProgress((window.scrollY / docHeight) * 100);
-      }
+    const onScroll = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(scrollable > 0 ? Math.min(100, (window.scrollY / scrollable) * 100) : 0);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
-  }, [mobileMenuOpen]);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   return (
     <>
-      {/* Scroll Progress Bar at very top */}
-      <div className="fixed top-0 left-0 right-0 z-[70] h-[2px] bg-white/5 pointer-events-none">
+      {/* Reading progress */}
+      <div
+        className="fixed inset-x-0 top-0 z-[70] h-[3px] bg-line-soft/60"
+        aria-hidden="true"
+      >
         <div
-          className="h-full transition-all duration-75"
-          style={{
-            width: `${scrollProgress}%`,
-            backgroundColor: 'var(--color-accent)',
-          }}
+          className="h-full bg-accent transition-[width] duration-100 ease-linear"
+          style={{ width: `${progress}%` }}
         />
       </div>
 
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#000000] border-b border-[#1c1c1c] h-16">
-        <div className="w-full px-5 sm:px-8 lg:px-12 h-full flex items-center justify-between">
-          {/* Exact Brand Logo matching Monodrift reference */}
-          <a href="#top" className="flex items-center group select-none">
-            <span className="font-['Tektur'] font-bold text-lg sm:text-xl tracking-tight text-white uppercase group-hover:text-[var(--color-accent)] transition-colors">
-              MONODRIFT
+      <header className="fixed inset-x-0 top-0 z-50 h-16 border-b border-line-soft bg-ink-deep/95 backdrop-blur-md">
+        <div className="shell flex h-full items-center justify-between">
+          <a
+            href="#top"
+            className="group flex items-baseline gap-1.5 text-white transition-colors hover:text-accent"
+            aria-label={`${SITE.brand} — back to top`}
+          >
+            <span className="font-heading text-lg font-bold tracking-[-0.04em] sm:text-xl">
+              {SITE.wordmark}
             </span>
-            <span className="font-['Tektur'] font-bold text-lg sm:text-xl text-white group-hover:text-[var(--color-accent)] transition-colors">
-              &gt;&gt;
-            </span>
+            <MonoArrow className="h-3.5 w-2.5 self-center transition-transform duration-300 group-hover:translate-x-[3px]" />
           </a>
 
-          {/* Right Controls: Exactly 2 controls matching screenshot */}
-          <div className="flex items-center gap-4 sm:gap-5">
-            {/* 1. Green Circular Dot Color Changer */}
+          <div className="flex items-center gap-3 sm:gap-5">
+            <span className="hidden font-mono text-[0.68rem] uppercase tracking-[0.2em] text-dim lg:inline">
+              {SITE.descriptor}
+            </span>
+
             <ColorChanger />
 
-            {/* 2. Exact Monodrift Menu Hamburger Toggle (bordered box with 2 lines) */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="w-10 h-10 border border-white/20 bg-[#121212] rounded-sm flex flex-col items-center justify-center gap-1.5 hover:border-white transition-colors cursor-pointer group"
-              aria-label="Toggle navigation menu"
-              aria-expanded={mobileMenuOpen}
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-expanded={menuOpen}
+              aria-controls="site-menu"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              className="group flex h-10 w-10 cursor-pointer flex-col items-center justify-center gap-[6px] border border-line bg-surface transition-colors hover:border-accent"
             >
               <motion.span
-                className="w-5 h-[2px] bg-white group-hover:bg-[var(--color-accent)] transition-colors"
-                animate={mobileMenuOpen ? { rotate: 45, y: 4 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.2 }}
+                className="block h-[2px] w-5 bg-white transition-colors group-hover:bg-accent"
+                animate={menuOpen ? { rotate: 45, y: 4 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.25, ease }}
               />
               <motion.span
-                className="w-3.5 h-[2px] bg-white self-end mr-2.5 group-hover:bg-[var(--color-accent)] transition-colors"
-                animate={mobileMenuOpen ? { rotate: -45, y: -4, width: '20px', marginRight: '0px' } : { rotate: 0, y: 0, width: '14px' }}
-                transition={{ duration: 0.2 }}
+                className="block h-[2px] w-3.5 self-center bg-white transition-colors group-hover:bg-accent"
+                animate={menuOpen ? { rotate: -45, y: -4, width: 20 } : { rotate: 0, y: 0, width: 14 }}
+                transition={{ duration: 0.25, ease }}
               />
             </button>
           </div>
         </div>
 
-        {/* Full-Screen Monodrift Navigation Overlay */}
         <AnimatePresence>
-          {mobileMenuOpen && (
+          {menuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
+              id="site-menu"
+              initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed inset-x-0 top-16 bg-[#000000]/98 backdrop-blur-xl border-t border-[#1c1c1c] z-40 h-[calc(100svh-4rem)] overflow-y-auto"
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.35, ease }}
+              className="fixed inset-x-0 top-16 z-40 h-[calc(100svh-4rem)] overflow-y-auto border-t border-line-soft bg-ink-deep/95 backdrop-blur-xl"
             >
-              <div className="max-w-[1600px] mx-auto px-5 sm:px-8 lg:px-12 py-10 grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-12">
-                <div>
-                  <span className="font-['Fragment_Mono'] text-xs text-[#555] uppercase tracking-widest block mb-6">
-                    [ SITE NAVIGATION ]
-                  </span>
-                  <nav className="grid grid-cols-1 sm:grid-cols-2 gap-2" aria-label="Expanded primary navigation">
-                    {NAV_ITEMS.map((item, i) => (
-                      <motion.a
-                        key={item.label}
-                        href={item.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        initial={{ opacity: 0, x: -16 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.03, duration: 0.25 }}
-                        className="group flex items-baseline justify-between p-3.5 border border-[#1c1c1c] hover:border-[#333] hover:bg-[#121212] transition-all"
-                      >
-                        <div className="flex items-baseline gap-3">
-                          <span className="font-['Fragment_Mono'] text-xs text-[#555] group-hover:text-[var(--color-accent)]">
-                            {item.num}
-                          </span>
-                          <span className="font-['Tektur'] text-xl sm:text-2xl font-bold uppercase text-white group-hover:text-[var(--color-accent)] transition-colors">
-                            {item.label}
-                          </span>
-                        </div>
-                        <span className="font-['Fragment_Mono'] text-xs text-[#444] group-hover:text-white transition-colors">
-                          &gt;
+              <div className="shell grid gap-12 py-12 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
+                <nav aria-label="Section navigation" className="flex flex-col">
+                  <span className="kicker mb-6 text-dim">[ SITE NAVIGATION ]</span>
+                  {NAV_LINKS.map((link, index) => (
+                    <motion.a
+                      key={link.label}
+                      href={link.href}
+                      onClick={closeMenu}
+                      initial={{ opacity: 0, x: -18 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: index * 0.035, ease }}
+                      className="row-invert group flex items-center justify-between border-b border-line-soft px-2 py-3.5 text-white"
+                    >
+                      <span className="flex items-baseline gap-4">
+                        <span className="font-mono text-[0.68rem] tracking-[0.2em] text-dim group-hover:text-accent-ink">
+                          {link.num}
                         </span>
-                      </motion.a>
-                    ))}
-                  </nav>
-                </div>
+                        <span className="font-heading text-2xl font-bold tracking-[-0.03em] sm:text-3xl">
+                          {link.label}
+                        </span>
+                      </span>
+                      <MonoArrow className="h-4 w-3 opacity-40 transition-transform duration-300 group-hover:translate-x-1 group-hover:opacity-100" />
+                    </motion.a>
+                  ))}
+                </nav>
 
-                <div className="border-t lg:border-t-0 lg:border-l border-[#222] pt-8 lg:pt-0 lg:pl-12 flex flex-col justify-between">
-                  <div>
-                    <span className="font-['Fragment_Mono'] text-xs text-[#555] uppercase tracking-widest block mb-4">
-                      [ STUDIO SPECIFICATION ]
-                    </span>
-                    <div className="space-y-4 font-['Fragment_Mono'] text-xs text-[#888]">
+                <div className="flex flex-col justify-between gap-10 border-line-soft lg:border-l lg:pl-16">
+                  <div className="flex flex-col gap-6">
+                    <span className="kicker text-dim">[ STUDIO ]</span>
+                    <dl className="mono-label grid gap-4">
                       <div>
-                        <div className="text-[#555] text-[10px] uppercase">CREATIVE ENGINEER:</div>
-                        <div className="text-white uppercase font-bold text-sm">{PERSONAL_DETAILS.fullName}</div>
+                        <dt className="text-dim">Email</dt>
+                        <dd>
+                          <a className="link-underline" href={SITE.emailHref}>
+                            {SITE.email}
+                          </a>
+                        </dd>
                       </div>
                       <div>
-                        <div className="text-[#555] text-[10px] uppercase">DIRECT INQUIRIES:</div>
-                        <a href={`mailto:${PERSONAL_DETAILS.email}`} className="text-white hover:underline text-sm">
-                          {PERSONAL_DETAILS.email}
-                        </a>
+                        <dt className="text-dim">Phone</dt>
+                        <dd>
+                          <a className="link-underline" href={SITE.phoneHref}>
+                            {SITE.phone}
+                          </a>
+                        </dd>
                       </div>
                       <div>
-                        <div className="text-[#555] text-[10px] uppercase">LOCATION:</div>
-                        <div className="text-white uppercase">{PERSONAL_DETAILS.location}</div>
+                        <dt className="text-dim">Studio</dt>
+                        <dd>
+                          {SITE.addressLines.map((line) => (
+                            <span key={line} className="block">
+                              {line}
+                            </span>
+                          ))}
+                        </dd>
                       </div>
-                      <div>
-                        <div className="text-[#555] text-[10px] uppercase">GITHUB:</div>
+                    </dl>
+
+                    <div className="flex flex-wrap gap-x-5 gap-y-2 pt-2">
+                      {SOCIAL_LINKS.map((social) => (
                         <a
-                          href={PERSONAL_DETAILS.github}
+                          key={social.label}
+                          href={social.href}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-[var(--color-accent)] hover:underline"
+                          className="kicker link-underline text-muted hover:text-white"
                         >
-                          github.com/codewith-shivank
+                          {social.label}
                         </a>
-                      </div>
+                      ))}
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-6 border-t border-[#1c1c1c]">
-                    <a
-                      href="#contact"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center justify-between p-4 font-['Tektur'] text-sm font-bold uppercase transition-all"
-                      style={{
-                        backgroundColor: 'var(--color-accent)',
-                        color: '#0e0e0e',
-                      }}
-                    >
-                      <span>&gt; START A PROJECT</span>
-                      <span>&rarr;</span>
-                    </a>
-                  </div>
+                  <a
+                    href="#contact"
+                    onClick={closeMenu}
+                    className="group flex items-center justify-between bg-accent px-5 py-4 text-accent-ink transition-colors hover:bg-white"
+                  >
+                    <span className="mono-label font-bold">&gt;&gt; START A PROJECT</span>
+                    <MonoArrow className="h-3.5 w-2.5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </a>
                 </div>
               </div>
             </motion.div>

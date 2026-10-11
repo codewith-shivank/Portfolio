@@ -1,283 +1,137 @@
 import { motion } from 'framer-motion';
-import { STATS_METRICS, AWARDS_LIST } from '../data/portfolioData';
+import SectionIntro from './ui/SectionIntro';
+import RollingNumber from './ui/RollingNumber';
+import MonoArrow from './ui/MonoArrow';
+import SmartImage from './ui/SmartImage';
+import { AWARDS, RESULTS_CTA, RESULTS_INTRO, STATS } from '../data/monodrift';
 
-const ease = [0.22, 1, 0.36, 1] as const;
-
-function fadeUp(delay: number) {
-  return {
-    initial: { opacity: 0, y: 24 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: '-50px' },
-    transition: { duration: 0.7, delay, ease },
-  } as const;
-}
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function ResultsSection() {
   return (
-    <section id="results" className="bg-[#f7f6f3] py-24 sm:py-32 text-[#0e0e0e] border-b border-[#d9d8d3]">
-      <div className="max-w-[1600px] mx-auto px-5 sm:px-8 lg:px-12">
-        {/* Header area */}
-        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-8 lg:gap-16 mb-20">
-          {/* Left: page nav label */}
-          <motion.div {...fadeUp(0)}>
-            <span className="font-['Fragment_Mono'] text-xs text-[#6d6d6d] uppercase tracking-widest block mb-2">
-              [ 05 / RESULTS ]
-            </span>
-            <div
-              className="w-16 h-[2px] mb-4"
-              style={{ backgroundColor: 'var(--color-accent)' }}
-            />
-            <div className="font-['Fragment_Mono'] text-[11px] text-[#888]">
-              METRICS: EMPIRICAL
-            </div>
-          </motion.div>
+    <section id="results" className="section-ink border-t border-line-soft pt-16 sm:pt-24">
+      <SectionIntro
+        index={RESULTS_INTRO.index}
+        eyebrow={RESULTS_INTRO.eyebrow}
+        heading={
+          <>
+            <span className="hl">WHAT WE COUNT</span>, NOT WHAT WE CLAIM.
+          </>
+        }
+        intro={RESULTS_INTRO.intro}
+        meta={RESULTS_INTRO.meta}
+      />
 
-          {/* Right: heading + description */}
-          <div>
-            <motion.span {...fadeUp(0.05)} className="font-['Fragment_Mono'] text-[10px] text-[#6d6d6d] uppercase tracking-[0.1em] block mb-4">
-              [ HOW CONFIDENT ARE WE? ]
-            </motion.span>
-
-            <motion.h2 {...fadeUp(0.1)} className="font-['Tektur'] text-3xl sm:text-5xl lg:text-6xl font-bold uppercase leading-[0.92] text-[#0e0e0e] mb-6">
-              <span
-                className="inline-block text-[#0e0e0e] px-2"
-                style={{ backgroundColor: 'var(--color-accent)' }}
-              >
-                WHAT WE COUNT
-              </span>
-              <br />
-              NOT WHAT WE CLAIM.
-            </motion.h2>
-
-            <motion.div {...fadeUp(0.15)} className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8 border-t border-[#d9d8d3] pt-6">
-              <div>
-                <span className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider block mb-1">
-                  MEASURED OVER
-                </span>
-                <p className="font-['Tektur'] text-lg font-bold uppercase text-[#262626]">4+ YEARS IN PRODUCTION</p>
-                <p className="font-['Figtree'] text-xs text-[#8a8a8a] mt-0.5">80+ Repositories · Every Client · Real Workloads</p>
-              </div>
-              <div>
-                <p className="font-['Fragment_Mono'] text-xs text-[#6d6d6d] uppercase tracking-wider leading-relaxed">
-                  Results speak louder than pitches. Every number here comes from delivered work, continuous telemetry, and verified production performance.
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Stats Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
-          {/* Left column */}
-          <div className="space-y-6">
-            <motion.div {...fadeUp(0.1)} className="border border-[#d9d8d3] bg-white/70 p-6 sm:p-8">
-              <span className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider block mb-3">
-                [ PRODUCTION WORK ]
-              </span>
-              <div className="flex items-baseline gap-2 mb-2">
-                <span
-                  className="font-['Tektur'] text-5xl sm:text-6xl font-bold"
-                  style={{ color: 'var(--color-accent)' }}
-                >
-                  {STATS_METRICS[0].number}
-                </span>
-                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a] uppercase">PROJECTS</span>
-              </div>
-              <div
-                className="w-full h-[1px] mb-3"
-                style={{ backgroundColor: 'var(--color-accent)' }}
-              />
-              <p className="font-['Fragment_Mono'] text-xs text-[#666] uppercase tracking-wider leading-relaxed">
-                {STATS_METRICS[0].description}
-              </p>
-            </motion.div>
-
-            <motion.div {...fadeUp(0.2)} className="border border-[#d9d8d3] bg-white/70 p-6 sm:p-8">
-              <span className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider block mb-3">
-                [ RAPID PROTOTYPING ]
-              </span>
-              <div className="flex items-baseline gap-2 mb-2">
-                <span
-                  className="font-['Tektur'] text-5xl sm:text-6xl font-bold"
-                  style={{ color: 'var(--color-accent)' }}
-                >
-                  {STATS_METRICS[1].number}
-                </span>
-                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a] uppercase">VELOCITY</span>
-              </div>
-              <div
-                className="w-full h-[1px] mb-3"
-                style={{ backgroundColor: 'var(--color-accent)' }}
-              />
-              <p className="font-['Fragment_Mono'] text-xs text-[#666] uppercase tracking-wider leading-relaxed">
-                {STATS_METRICS[1].description}
-              </p>
-            </motion.div>
-          </div>
-
-          {/* Center Column: Direct Call to Action Card */}
-          <motion.div {...fadeUp(0.15)} className="border border-[#d9d8d3] bg-white p-6 sm:p-8 flex flex-col justify-between min-h-[420px]">
-            <div>
-              <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a] italic block mb-6">
-                BETWEEN US, THE TRUTH:
-              </span>
-              <h3 className="font-['Tektur'] text-2xl sm:text-4xl font-bold uppercase text-[#0e0e0e] leading-[1.05]">
-                EVERY NUMBER
-                <br />
-                HERE STARTED
-                <br />
-                WITH A CALL.
-              </h3>
-            </div>
-
-            <div className="flex justify-center my-6">
-              <div
-                className="w-24 h-24 rounded-full border-2 flex items-center justify-center p-2"
-                style={{ borderColor: 'var(--color-accent)' }}
-              >
-                <div
-                  className="w-16 h-16 rounded-full border border-dashed flex items-center justify-center animate-spin"
-                  style={{
-                    borderColor: '#999',
-                    animationDuration: '10s',
-                  }}
-                >
-                  <span
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: 'var(--color-accent)' }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 px-6 py-4 font-['Tektur'] font-bold text-sm uppercase tracking-wide transition-colors w-full justify-center"
-                style={{
-                  backgroundColor: 'var(--color-accent)',
-                  color: '#0e0e0e',
-                }}
-              >
-                <span>&gt;</span>
-                <span>START A PROJECT WITH SHIVANK</span>
-              </a>
-              <p className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider text-center mt-3">
-                DIRECT CHAT · NO INTERMEDIARIES
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Right column */}
-          <div className="space-y-6">
-            <motion.div {...fadeUp(0.2)} className="border border-[#d9d8d3] bg-white/70 p-6 sm:p-8">
-              <span className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider block mb-3">
-                [ CLIENT RETENTION ]
-              </span>
-              <div className="flex items-baseline gap-2 mb-2">
-                <span
-                  className="font-['Tektur'] text-5xl sm:text-6xl font-bold"
-                  style={{ color: 'var(--color-accent)' }}
-                >
-                  {STATS_METRICS[2].number}
-                </span>
-                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a] uppercase">RETURN RATE</span>
-              </div>
-              <div
-                className="w-full h-[1px] mb-3"
-                style={{ backgroundColor: 'var(--color-accent)' }}
-              />
-              <p className="font-['Fragment_Mono'] text-xs text-[#666] uppercase tracking-wider leading-relaxed">
-                {STATS_METRICS[2].description}
-              </p>
-            </motion.div>
-
-            <motion.div {...fadeUp(0.25)} className="border border-[#d9d8d3] bg-white/70 p-6 sm:p-8">
-              <span className="font-['Fragment_Mono'] text-[10px] text-[#8a8a8a] uppercase tracking-wider block mb-3">
-                [ ORGANIC GROWTH ]
-              </span>
-              <div className="flex items-baseline gap-2 mb-2">
-                <span
-                  className="font-['Tektur'] text-5xl sm:text-6xl font-bold"
-                  style={{ color: 'var(--color-accent)' }}
-                >
-                  {STATS_METRICS[3].number}
-                </span>
-                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a] uppercase">REFERRAL</span>
-              </div>
-              <div
-                className="w-full h-[1px] mb-3"
-                style={{ backgroundColor: 'var(--color-accent)' }}
-              />
-              <p className="font-['Fragment_Mono'] text-xs text-[#666] uppercase tracking-wider leading-relaxed">
-                {STATS_METRICS[3].description}
-              </p>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Awards heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="mt-12"
-        >
-          <div className="flex items-center justify-between">
-            <h3 className="font-['Tektur'] text-[clamp(1.8rem,5.5vw,4.5rem)] font-bold uppercase text-[#0e0e0e] leading-[0.95] tracking-[-0.02em]">
-              AWARDS &amp; RECOGNITION
-            </h3>
-            <span className="font-['Fragment_Mono'] text-xs text-[#888] uppercase hidden sm:inline">
-              INDUSTRY HONORS
-            </span>
-          </div>
-          <div
-            className="w-full h-[2px] mt-4"
-            style={{ backgroundColor: 'var(--color-accent)' }}
-          />
-        </motion.div>
-
-        {/* Awards list */}
-        <div className="mt-8 space-y-0">
-          {AWARDS_LIST.map((item, i) => (
+      {/* Odometer counters */}
+      <div className="shell">
+        <div className="grid gap-px bg-line sm:grid-cols-2">
+          {STATS.map((stat, index) => (
             <motion.div
-              key={item.award}
-              initial={{ opacity: 0, y: 16 }}
+              key={stat.id}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.06 }}
-              className="flex items-center justify-between py-5 border-b border-[#d9d8d3] group hover:border-[#222] transition-colors"
+              viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
+              transition={{ duration: 0.7, delay: index * 0.06, ease }}
+              className="flex flex-col justify-between gap-10 bg-page p-6 sm:p-9"
             >
-              <div className="flex items-center gap-6">
-                <span className="font-['Fragment_Mono'] text-xs text-[#8a8a8a]">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <div>
-                  <span className="font-['Tektur'] text-base sm:text-xl font-bold uppercase text-[#262626] group-hover:underline">
-                    {item.award}
-                  </span>
-                  <span className="hidden md:inline font-['Fragment_Mono'] text-[10px] text-[#777] ml-3">
-                    [{item.project}]
-                  </span>
-                </div>
+              <div className="flex items-start justify-between gap-6">
+                <span className="kicker text-muted">{stat.label}</span>
+                <span className="kicker text-dim">{stat.number}</span>
               </div>
-              <div className="flex items-center gap-6">
-                <span className="font-['Figtree'] text-xs sm:text-sm text-[#555] font-semibold">{item.org}</span>
-                <span
-                  className="font-['Fragment_Mono'] text-xs px-2 py-0.5 font-bold"
-                  style={{
-                    backgroundColor: 'var(--color-accent)',
-                    color: '#0e0e0e',
-                  }}
-                >
-                  {item.year}
-                </span>
+
+              <div className="flex items-end gap-3">
+                <RollingNumber digits={stat.digits} className="display display-lg" />
+                <span className="mono-label pb-2 text-muted">{stat.unit}</span>
               </div>
+
+              <p className="max-w-xs text-sm leading-relaxed text-muted">{stat.caption}</p>
             </motion.div>
           ))}
         </div>
       </div>
+
+      {/* Call to action band */}
+      <div className="mt-16 bg-accent text-accent-ink sm:mt-20">
+        <div className="shell grid gap-8 py-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-end lg:py-16">
+          <div>
+            <span className="kicker opacity-70">{RESULTS_CTA.kicker}</span>
+            <h3 className="display display-lg mt-5 max-w-[22ch]">{RESULTS_CTA.heading}</h3>
+          </div>
+
+          <div className="flex flex-col items-start gap-5 lg:items-end">
+            <a
+              href="#contact"
+              className="group inline-flex items-center gap-3 bg-ink px-5 py-4 text-white transition-colors hover:bg-white hover:text-ink"
+            >
+              <MonoArrow className="h-3.5 w-2.5 transition-transform duration-300 group-hover:translate-x-1" />
+              <span className="mono-label font-bold">{RESULTS_CTA.cta}</span>
+            </a>
+            <span className="mono-label opacity-70">{RESULTS_CTA.note}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Awards */}
+      <div className="shell pt-20 sm:pt-28">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_minmax(0,0.9fr)] lg:items-end lg:gap-16">
+          <div>
+            <span className="kicker text-muted">{AWARDS.kicker}</span>
+            <p className="display display-lg mt-5">{AWARDS.headline}</p>
+          </div>
+
+          <div className="flex items-end gap-4">
+            <RollingNumber digits={AWARDS.counter} className="display display-lg text-accent" />
+            <span className="kicker max-w-[16ch] pb-2 text-muted">{AWARDS.counterLabel}</span>
+          </div>
+
+          <div className="flex items-end gap-6">
+            <div className="frame group w-24 shrink-0 sm:w-32">
+              <SmartImage src={AWARDS.image} alt={AWARDS.imageAlt} className="aspect-[2/3]" />
+            </div>
+            <p className="max-w-[24ch] text-sm leading-relaxed text-muted">{AWARDS.note}</p>
+          </div>
+        </div>
+
+        {/* Awards table */}
+        <div className="mt-14">
+          <div className="kicker hidden grid-cols-[90px_minmax(0,1.1fr)_minmax(0,1.4fr)_70px] gap-6 border-b border-line pb-4 text-dim sm:grid">
+            {AWARDS.columns.map((column) => (
+              <span key={column} className={column === 'TIMES' ? 'text-right' : ''}>
+                {column}
+              </span>
+            ))}
+          </div>
+
+          <ul>
+            {AWARDS.rows.map((row) => (
+              <li
+                key={`${row.year}-${row.house}`}
+                className="row-invert grid grid-cols-1 gap-2 border-b border-line px-1 py-5 sm:grid-cols-[90px_minmax(0,1.1fr)_minmax(0,1.4fr)_70px] sm:items-center sm:gap-6"
+              >
+                <span className="mono-label text-muted">{row.year}</span>
+                <span className="font-heading text-sm font-bold uppercase tracking-[-0.01em] sm:text-base">
+                  {row.house}
+                </span>
+                <span className="text-sm text-muted">{row.award}</span>
+                <span className="mono-label sm:text-right">{row.times}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex flex-col gap-6 pt-8 sm:flex-row sm:items-center sm:justify-between">
+            <p className="max-w-xl text-sm leading-relaxed text-muted">{AWARDS.footer}</p>
+            <a
+              href="#contact"
+              className="group inline-flex items-center gap-3 self-start border border-line px-4 py-3 transition-colors hover:border-accent hover:text-accent"
+            >
+              <MonoArrow className="h-3 w-2 transition-transform duration-300 group-hover:translate-x-1" />
+              <span className="mono-label">{AWARDS.footerCta}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div className="pb-20 sm:pb-28" />
     </section>
   );
 }

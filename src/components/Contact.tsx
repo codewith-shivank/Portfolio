@@ -1,275 +1,209 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { PERSONAL_DETAILS } from '../data/portfolioData';
+import { motion } from 'framer-motion';
+import BracketLabel from './ui/BracketLabel';
+import MonoArrow from './ui/MonoArrow';
+import { MetaList } from './ui/SectionIntro';
+import { CONTACT_CHANNELS, CONTACT_INTRO, CONTACT_QUESTIONS, SITE, SOCIAL_LINKS } from '../data/monodrift';
+import type { ContactQuestion } from '../types';
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+function QuestionBlock({
+  question,
+  value,
+  onAnswer,
+}: {
+  question: ContactQuestion;
+  value: string;
+  onAnswer: (id: string, value: string) => void;
+}) {
+  return (
+    <li className="grid gap-5 border-b border-line py-8 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:gap-12">
+      <div className="flex gap-5">
+        <span className="kicker text-dim">{question.number}</span>
+        <div>
+          <h3 className="display display-sm max-w-[22ch]">{question.title}</h3>
+          <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted">{question.hint}</p>
+        </div>
+      </div>
+
+      <div className="lg:pt-1">
+        {question.kind === 'options' ? (
+          <div className="flex flex-wrap gap-2" role="group" aria-label={question.title}>
+            {question.options?.map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => onAnswer(question.id, option)}
+                aria-pressed={value === option}
+                data-active={value === option}
+                className="toggle-chip cursor-pointer"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        ) : question.kind === 'textarea' ? (
+          <textarea
+            id={question.id}
+            name={question.id}
+            rows={4}
+            required
+            value={value}
+            onChange={(event) => onAnswer(question.id, event.target.value)}
+            placeholder={question.placeholder}
+            className="w-full resize-none border border-line bg-surface px-4 py-3 font-mono text-sm uppercase tracking-[0.06em] text-white placeholder:text-dim focus:border-accent focus:outline-none"
+          />
+        ) : (
+          <input
+            id={question.id}
+            name={question.id}
+            type={question.kind}
+            required
+            value={value}
+            onChange={(event) => onAnswer(question.id, event.target.value)}
+            placeholder={question.placeholder}
+            className="w-full border border-line bg-surface px-4 py-3 font-mono text-sm uppercase tracking-[0.06em] text-white placeholder:text-dim focus:border-accent focus:outline-none"
+          />
+        )}
+      </div>
+    </li>
+  );
+}
 
 export default function ContactSection() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    projectType: 'Full-Stack Platform',
-    budget: '$5,000 - $10,000',
-    message: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [sent, setSent] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    // Simulate instantaneous delivery feedback
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    }, 600);
+  const setAnswer = (id: string, value: string) => {
+    setAnswers((current) => ({ ...current, [id]: value }));
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(PERSONAL_DETAILS.email);
-    setCopiedEmail(true);
-    setTimeout(() => setCopiedEmail(false), 2500);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    // No backend on this build: the answers are handed to the visitor's mail client.
+    const subject = `New project — ${answers.making ?? 'enquiry'} (${answers.lane ?? 'lane TBC'})`;
+    const body = CONTACT_QUESTIONS.map(
+      (question) => `${question.title}: ${answers[question.id] ?? '—'}`,
+    ).join('\n');
+
+    window.location.href = `${SITE.emailHref}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setSent(true);
   };
 
   return (
-    <section id="contact" className="bg-[#0e0e0e] py-24 sm:py-32 border-b border-[#222]">
-      <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12">
-        <div
-          className="mb-14 h-[2px] w-full"
-          style={{ backgroundColor: 'var(--color-accent)' }}
-        />
+    <section id="contact" className="section-ink-2 border-t border-line-soft pt-16 sm:pt-24">
+      <div className="shell">
+        <div className="rule-t flex flex-wrap items-center justify-between gap-3 py-6">
+          <BracketLabel className="text-muted">{CONTACT_INTRO.eyebrow}</BracketLabel>
+          <span className="kicker text-dim">{CONTACT_INTRO.location}</span>
+        </div>
 
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-20">
-          {/* Left Column: Direct Inquiries & Details */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="font-['Fragment_Mono'] text-xs uppercase tracking-widest text-[#777]">
-                [ 09 / INITIATE CONTACT ]
-              </span>
-              <span
-                className="w-2 h-2 rounded-full animate-ping"
-                style={{ backgroundColor: 'var(--color-accent)' }}
-              />
-            </div>
-
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="font-['Tektur'] text-3xl sm:text-5xl lg:text-6xl font-bold uppercase leading-[0.92] text-white"
-            >
-              LET&apos;S START
-              <br />
-              <span
-                className="px-2 text-[#0e0e0e] inline-block"
-                style={{ backgroundColor: 'var(--color-accent)' }}
-              >
-                A CONVERSATION.
-              </span>
-            </motion.h2>
-
-            <p className="mt-6 max-w-md font-['Figtree'] text-base leading-relaxed text-[#8a8a8a]">
-              Have a product to build, an engineering architecture to untangle, or a 60 FPS interactive experience to design? Send a message directly to Shivank.
+        <div className="grid gap-12 pb-16 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-20">
+          <h2 className="display display-lg max-w-[18ch]">{CONTACT_INTRO.heading}</h2>
+          <div className="flex flex-col gap-8">
+            <p className="max-w-md text-sm leading-relaxed text-muted sm:text-base">
+              {CONTACT_INTRO.intro}
             </p>
-
-            {/* Quick Contact & Action Buttons */}
-            <div className="mt-8 space-y-4">
-              <div className="p-4 bg-[#141414] border border-[#262626] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <span className="font-['Fragment_Mono'] text-[10px] text-[#666] uppercase block">
-                    DIRECT INBOX
-                  </span>
-                  <span className="font-['Tektur'] text-sm sm:text-base font-bold text-white uppercase">
-                    {PERSONAL_DETAILS.email}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={copyToClipboard}
-                  className="px-3 py-1.5 font-['Fragment_Mono'] text-xs uppercase transition-colors border border-[#333] hover:border-white text-white"
-                >
-                  {copiedEmail ? '✓ COPIED' : 'COPY EMAIL'}
-                </button>
-              </div>
-
-              {/* Verified Handles */}
-              <div className="grid grid-cols-2 gap-3 font-['Fragment_Mono'] text-xs">
-                <a
-                  href={PERSONAL_DETAILS.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-3 bg-[#141414] border border-[#222] hover:border-[#444] transition-colors flex items-center justify-between group"
-                >
-                  <span className="text-[#888]">GITHUB</span>
-                  <span className="text-white group-hover:text-[var(--color-accent)]">&rarr;</span>
-                </a>
-                <a
-                  href={PERSONAL_DETAILS.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-3 bg-[#141414] border border-[#222] hover:border-[#444] transition-colors flex items-center justify-between group"
-                >
-                  <span className="text-[#888]">LINKEDIN</span>
-                  <span className="text-white group-hover:text-[var(--color-accent)]">&rarr;</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Real-time Status Card */}
-            <div className="mt-8 pt-6 border-t border-[#222] font-['Fragment_Mono'] text-xs text-[#777] space-y-1">
-              <div>RESPONSE WINDOW: WITHIN 12 HOURS</div>
-              <div>AVAILABILITY: OPEN FOR CONTRACTS &amp; SPRINT RETRACTS</div>
-              <div>LOCATION: {PERSONAL_DETAILS.location}</div>
-            </div>
-          </div>
-
-          {/* Right Column: Functional Contact Form */}
-          <div className="bg-[#121212] border border-[#222] p-6 sm:p-10">
-            <AnimatePresence mode="wait">
-              {isSubmitted ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="text-center py-12 space-y-4"
-                >
-                  <div
-                    className="w-16 h-16 rounded-full mx-auto flex items-center justify-center font-['Tektur'] text-2xl font-bold text-[#0e0e0e]"
-                    style={{ backgroundColor: 'var(--color-accent)' }}
-                  >
-                    ✓
-                  </div>
-                  <h3 className="font-['Tektur'] text-2xl font-bold uppercase text-white">
-                    MESSAGE TRANSMITTED
-                  </h3>
-                  <p className="font-['Figtree'] text-sm text-[#888] max-w-sm mx-auto">
-                    Thank you, {formData.name}. Your inquiry has been received. Shivank will follow up at {formData.email} promptly.
-                  </p>
-                  <button
-                    onClick={() => {
-                      setIsSubmitted(false);
-                      setFormData({
-                        name: '',
-                        email: '',
-                        projectType: 'Full-Stack Platform',
-                        budget: '$5,000 - $10,000',
-                        message: '',
-                      });
-                    }}
-                    className="mt-6 px-4 py-2 border border-[#333] font-['Fragment_Mono'] text-xs text-white uppercase hover:bg-[#1a1a1a]"
-                  >
-                    SEND ANOTHER INQUIRY
-                  </button>
-                </motion.div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <label className="block">
-                      <span className="mb-2 block font-['Fragment_Mono'] text-[10px] uppercase tracking-wider text-[#888]">
-                        YOUR NAME *
-                      </span>
-                      <input
-                        required
-                        type="text"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="ALICE CHEN"
-                        className="form-input bg-[#161616] border-[#2a2a2a] text-white p-3 font-['Fragment_Mono'] text-xs w-full focus:outline-none focus:border-[var(--color-accent)]"
-                      />
-                    </label>
-
-                    <label className="block">
-                      <span className="mb-2 block font-['Fragment_Mono'] text-[10px] uppercase tracking-wider text-[#888]">
-                        EMAIL ADDRESS *
-                      </span>
-                      <input
-                        required
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="ALICE@COMPANY.COM"
-                        className="form-input bg-[#161616] border-[#2a2a2a] text-white p-3 font-['Fragment_Mono'] text-xs w-full focus:outline-none focus:border-[var(--color-accent)]"
-                      />
-                    </label>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <label className="block">
-                      <span className="mb-2 block font-['Fragment_Mono'] text-[10px] uppercase tracking-wider text-[#888]">
-                        PROJECT DISCIPLINE
-                      </span>
-                      <select
-                        value={formData.projectType}
-                        onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                        className="form-input bg-[#161616] border-[#2a2a2a] text-white p-3 font-['Fragment_Mono'] text-xs w-full focus:outline-none focus:border-[var(--color-accent)]"
-                      >
-                        <option value="Full-Stack Platform">FULL-STACK PLATFORM</option>
-                        <option value="3D / WebGL Experience">3D / WEBGL EXPERIENCE</option>
-                        <option value="Design System & Architecture">DESIGN SYSTEM & ARCHITECTURE</option>
-                        <option value="Sprint Retainer">MONTHLY SPRINT RETAINER</option>
-                        <option value="Advisory / Code Review">ADVISORY / CODE AUDIT</option>
-                      </select>
-                    </label>
-
-                    <label className="block">
-                      <span className="mb-2 block font-['Fragment_Mono'] text-[10px] uppercase tracking-wider text-[#888]">
-                        ESTIMATED BUDGET
-                      </span>
-                      <select
-                        value={formData.budget}
-                        onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                        className="form-input bg-[#161616] border-[#2a2a2a] text-white p-3 font-['Fragment_Mono'] text-xs w-full focus:outline-none focus:border-[var(--color-accent)]"
-                      >
-                        <option value="<$5,000">&lt; $5,000</option>
-                        <option value="$5,000 - $10,000">$5,000 - $10,000</option>
-                        <option value="$10,000 - $25,000">$10,000 - $25,000</option>
-                        <option value="$25,000+">$25,000+</option>
-                        <option value="Monthly Retainer">MONTHLY RETAINER</option>
-                      </select>
-                    </label>
-                  </div>
-
-                  <label className="block">
-                    <span className="mb-2 block font-['Fragment_Mono'] text-[10px] uppercase tracking-wider text-[#888]">
-                      PROJECT DETAILS &amp; TIMELINE *
-                    </span>
-                    <textarea
-                      required
-                      rows={4}
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="DESCRIBE THE SYSTEM, SCOPE, DELIVERABLES, AND ANTICIPATED LAUNCH DATE..."
-                      className="form-input bg-[#161616] border-[#2a2a2a] text-white p-3 font-['Fragment_Mono'] text-xs w-full focus:outline-none focus:border-[var(--color-accent)] resize-y min-h-[110px]"
-                    />
-                  </label>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-4 font-['Tektur'] text-sm font-bold uppercase transition-all flex items-center justify-center gap-2"
-                    style={{
-                      backgroundColor: 'var(--color-accent)',
-                      color: '#0e0e0e',
-                    }}
-                  >
-                    {isSubmitting ? (
-                      <span>TRANSMITTING...</span>
-                    ) : (
-                      <>
-                        <span>&gt; TRANSMIT PROJECT BRIEF</span>
-                        <span>&rarr;</span>
-                      </>
-                    )}
-                  </button>
-
-                  <p className="font-['Fragment_Mono'] text-[10px] uppercase text-[#666] text-center">
-                    ENCRYPTED TRANSMISSION · CONFIDENTIALITY GUARANTEED
-                  </p>
-                </form>
-              )}
-            </AnimatePresence>
+            <MetaList meta={CONTACT_INTRO.meta} />
           </div>
         </div>
+
+        {/* Six questions */}
+        <form onSubmit={handleSubmit} className="border-t border-line">
+          <div className="flex flex-wrap items-center justify-between gap-3 py-5">
+            <span className="kicker text-muted">[ {CONTACT_INTRO.formLabel} ]</span>
+            <span className="kicker text-dim">
+              {Object.values(answers).filter(Boolean).length} / {CONTACT_QUESTIONS.length} ANSWERED
+            </span>
+          </div>
+
+          <ul className="border-t border-line">
+            {CONTACT_QUESTIONS.map((question) => (
+              <QuestionBlock
+                key={question.id}
+                question={question}
+                value={answers[question.id] ?? ''}
+                onAnswer={setAnswer}
+              />
+            ))}
+          </ul>
+
+          <div className="flex flex-col gap-6 py-8 lg:flex-row lg:items-center lg:justify-between">
+            <button
+              type="submit"
+              disabled={sent}
+              className="group inline-flex cursor-pointer items-center justify-between gap-8 bg-accent px-6 py-4 text-accent-ink transition-colors hover:bg-white disabled:cursor-default disabled:opacity-60"
+            >
+              <span className="mono-label font-bold">{sent ? 'SENT' : CONTACT_INTRO.submit}</span>
+              <MonoArrow className="h-3.5 w-2.5 transition-transform duration-300 group-hover:translate-x-1" />
+            </button>
+
+            <div className="max-w-md">
+              <p className="mono-label text-white">{CONTACT_INTRO.legal}</p>
+              <p className="mt-3 text-xs leading-relaxed text-dim">{CONTACT_INTRO.legalFine}</p>
+            </div>
+          </div>
+        </form>
+
+        {/* Other ways in */}
+        <div className="grid gap-px border-t border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+          {CONTACT_CHANNELS.map((channel) => (
+            <motion.div
+              key={channel.id}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-8% 0px -8% 0px' }}
+              transition={{ duration: 0.6, ease }}
+              className="flex flex-col justify-between gap-8 bg-page p-6"
+            >
+              <span className="kicker text-dim">{channel.eyebrow}</span>
+
+              <div>
+                {channel.href ? (
+                  <a
+                    href={channel.href}
+                    className="link-underline font-heading text-lg font-bold uppercase tracking-[-0.02em] hover:text-accent"
+                  >
+                    {channel.value}
+                  </a>
+                ) : (
+                  <span className="font-heading text-lg font-bold uppercase tracking-[-0.02em]">
+                    {channel.value}
+                  </span>
+                )}
+
+                {channel.lines.map((line) => (
+                  <span key={line} className="mono-label mt-2 block text-muted">
+                    {line}
+                  </span>
+                ))}
+
+                {channel.id === 'watch' ? (
+                  <span className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+                    {SOCIAL_LINKS.map((social) => (
+                      <a
+                        key={social.label}
+                        href={social.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mono-label link-underline text-muted hover:text-accent"
+                      >
+                        {social.label}
+                      </a>
+                    ))}
+                  </span>
+                ) : null}
+              </div>
+
+              <span className="mono-label text-dim">{channel.note}</span>
+            </motion.div>
+          ))}
+        </div>
       </div>
+
+      <div className="pb-20 sm:pb-24" />
     </section>
   );
 }
